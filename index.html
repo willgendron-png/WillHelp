@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#8f1d2c">
+<title>WillHelp</title>
+<style>
+:root{
+  --red:#8f1d2c; --red-d:#6e1421; --red-l:#f7e9eb; --ink:#1d1b1c; --ink2:#4a4547; --muted:#6b6467;
+  --bg:#faf8f6; --card:#ffffff; --line:#e4dedb; --ok:#1f6b3a; --ok-l:#e6f3ea; --warn:#8a5a00; --warn-l:#fff4dc;
+  --info:#1f4e79; --info-l:#e8f0f8; --focus:#1f4e79; --r:14px; --fs:1rem;
+}
+*{box-sizing:border-box}
+html{font-size:calc(16px * var(--scale,1))}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1rem/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-text-size-adjust:100%}
+a{color:var(--red-d)}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:6px}
+.skip{position:absolute;left:-999px;top:0;background:#fff;padding:.75rem 1rem;z-index:99}
+.skip:focus{left:.5rem;top:.5rem}
+header.top{background:var(--red);color:#fff;padding:.7rem 1rem;display:flex;align-items:center;gap:.75rem;position:sticky;top:0;z-index:20}
+.mark{width:38px;height:38px;border-radius:50%;background:#fff;color:var(--red);display:grid;place-items:center;font-weight:800;font-size:1.05rem;flex:none}
+.brand{font-weight:800;font-size:1.2rem;letter-spacing:.2px}
+.brand small{display:block;font-weight:500;font-size:.78rem;opacity:.9}
+.top .spacer{flex:1}
+.top button{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.5);border-radius:10px;min-height:40px;padding:0 .7rem;font:inherit;font-size:.85rem;cursor:pointer}
+.demo-banner{background:var(--warn-l);color:var(--warn);border-bottom:1px solid #f0d9a6;padding:.5rem 1rem;font-size:.88rem;display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
+.layout{display:flex;max-width:1180px;margin:0 auto}
+nav.main{display:flex}
+nav.main a{text-decoration:none;color:var(--ink2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:.78rem;font-weight:600;min-height:56px;flex:1}
+nav.main a svg{width:24px;height:24px}
+nav.main a[aria-current="page"]{color:var(--red)}
+@media (max-width:859px){
+  nav.main{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);z-index:30;padding-bottom:env(safe-area-inset-bottom)}
+  main{padding-bottom:90px}
+}
+@media (min-width:860px){
+  nav.main{flex-direction:column;width:200px;flex:none;padding:1rem .5rem;position:sticky;top:62px;align-self:flex-start;gap:.25rem}
+  nav.main a{flex-direction:row;justify-content:flex-start;gap:.7rem;padding:0 1rem;border-radius:12px;font-size:.98rem}
+  nav.main a[aria-current="page"]{background:var(--red-l)}
+}
+main{flex:1;min-width:0;padding:1rem;max-width:860px}
+h1{font-size:1.6rem;line-height:1.25;margin:.4rem 0 .25rem}
+h2{font-size:1.2rem;margin:1.4rem 0 .5rem}
+h3{font-size:1.05rem;margin:.2rem 0 .3rem}
+p{margin:.35rem 0 .7rem}
+.lead{color:var(--ink2);margin-top:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1rem;margin:.75rem 0}
+.card.tint{background:var(--red-l);border-color:#ecd0d4}
+.grid{display:grid;gap:.75rem}
+.actions{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.6rem;margin:.75rem 0}
+.bigbtn{overflow-wrap:anywhere;hyphens:auto;display:flex;flex-direction:column;justify-content:center;min-height:84px;padding:.8rem;border-radius:var(--r);background:#fff;border:1.5px solid var(--line);color:var(--ink);text-decoration:none;font-weight:700;font-size:1rem;cursor:pointer;text-align:left}
+.bigbtn span{font-weight:400;font-size:.82rem;color:var(--muted)}
+.bigbtn:hover{border-color:var(--red)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;min-height:46px;padding:0 1rem;border-radius:12px;border:1.5px solid var(--red);background:var(--red);color:#fff;font:inherit;font-weight:650;cursor:pointer;text-decoration:none}
+.btn.sec{background:#fff;color:var(--red-d)}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--red-d);padding:0 .5rem}
+.btn.small{min-height:38px;font-size:.88rem;padding:0 .75rem}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.row{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+.badge{display:inline-block;font-size:.75rem;font-weight:700;padding:.15rem .5rem;border-radius:999px;background:#eee;color:var(--ink2);vertical-align:middle}
+.b-ok{background:var(--ok-l);color:var(--ok)} .b-warn{background:var(--warn-l);color:var(--warn)} .b-info{background:var(--info-l);color:var(--info)} .b-red{background:var(--red-l);color:var(--red-d)}
+.note{font-size:.85rem;color:var(--muted)}
+.ctx{font-size:.85rem;color:var(--info);background:var(--info-l);border-radius:10px;padding:.45rem .65rem;margin:.5rem 0}
+.warnbox{font-size:.9rem;color:var(--warn);background:var(--warn-l);border-radius:10px;padding:.6rem .75rem;margin:.6rem 0}
+label.f{display:block;margin:.85rem 0}
+.prompt{display:block;font-weight:600;margin-bottom:.1rem}
+.flabel{display:block;font-size:.8rem;color:var(--muted);margin-bottom:.3rem}
+input[type=text],input[type=email],input[type=tel],input[type=date],input[type=number],input[type=password],select,textarea{width:100%;font:inherit;padding:.65rem .75rem;border:1.5px solid #cfc8c5;border-radius:10px;background:#fff;color:var(--ink);min-height:46px}
+textarea{min-height:90px;resize:vertical}
+.check{display:flex;gap:.6rem;align-items:flex-start;padding:.4rem 0;cursor:pointer}
+.check input{width:22px;height:22px;flex:none;margin-top:2px;accent-color:var(--red)}
+.meter{height:10px;background:var(--line);border-radius:999px;overflow:hidden;margin-top:.4rem}.meter span{display:block;height:100%;background:var(--ok)}
+.opp .quick{margin:.35rem 0;font-size:.95rem}.opp .fitline{margin:.35rem 0;font-size:.92rem;color:var(--ink2);font-weight:600}details.more{margin:.4rem 0}details.more>summary{cursor:pointer;font-weight:700;color:var(--red-d);min-height:44px;display:flex;align-items:center}
+.tabs{display:flex;flex-wrap:wrap;gap:.4rem;padding:.2rem 0 .5rem}
+.tabs a{white-space:nowrap;text-decoration:none;border:1.5px solid var(--line);border-radius:999px;padding:.45rem .9rem;color:var(--ink2);font-weight:600;font-size:.9rem;background:#fff;min-height:40px;display:inline-flex;align-items:center}
+.tabs a[aria-current="true"]{border-color:var(--red);color:var(--red-d);background:var(--red-l)}
+.step{border-left:4px solid var(--red);}
+.step .tag{font-size:.78rem;color:var(--muted)}
+.list-item{border-top:1px solid var(--line);padding:.7rem 0}
+.list-item:first-child{border-top:0}
+.kv{display:grid;grid-template-columns:minmax(90px,32%) minmax(0,1fr);overflow-wrap:anywhere;gap:.25rem .75rem;font-size:.92rem;margin:.5rem 0}
+.kv dt{color:var(--muted)} .kv dd{margin:0}
+.course{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.4rem;align-items:center;padding:.55rem 0;border-top:1px solid var(--line)}
+.course select{min-height:40px;padding:.3rem .5rem;width:auto}
+.ph{background:#fff3c4;border-bottom:2px dotted #c49000;padding:0 .15rem}
+.doc{background:#fff;border:1px solid var(--line);border-radius:6px;padding:1.4rem 1.5rem;font-family:Georgia,"Times New Roman",serif;color:#111;line-height:1.4;font-size:.95rem}
+.doc h1{font-family:inherit;font-size:1.5rem;margin:0}
+.doc .contact{font-size:.88rem;margin:.2rem 0 .6rem}
+.doc h2{font-family:inherit;font-size:1rem;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #444;margin:1rem 0 .4rem;padding-bottom:.1rem}
+.doc ul{margin:.2rem 0 .4rem 1.1rem;padding:0}
+.doc .ent{margin:.35rem 0}
+.doc .ent b{font-weight:700}
+.doc[contenteditable="true"]{outline:3px dashed var(--info)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:96px;background:#222;color:#fff;padding:.7rem 1rem;border-radius:10px;z-index:50;max-width:90vw;font-size:.92rem}
+@media (min-width:860px){.toast{bottom:24px}}
+footer.foot{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);margin-top:2rem;padding-top:1rem}
+details summary{cursor:pointer;font-weight:650;min-height:40px;display:flex;align-items:center}
+.pill-row{display:flex;flex-wrap:wrap;gap:.4rem}
+.pill{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:.4rem .8rem;font:inherit;font-size:.9rem;cursor:pointer;min-height:40px}
+.pill[aria-pressed="true"]{border-color:var(--red);background:var(--red-l);color:var(--red-d);font-weight:650}
+.stage-list button{display:block;width:100%;text-align:left;margin:.35rem 0}.stage-list button.picked{background:var(--red);color:#fff;border-color:var(--red)}.stage-list button.picked .note{color:#fff}
+.status-track{display:flex;flex-wrap:wrap;gap:.3rem;margin:.5rem 0}
+.status-track span{font-size:.75rem;padding:.25rem .5rem;border-radius:8px;background:#eee;color:var(--muted)}
+.status-track span.done{background:var(--ok-l);color:var(--ok)}
+.status-track span.cur{background:var(--red);color:#fff;font-weight:700}
+.tour-preview{position:relative;border:2px dashed #cfc8c5;border-radius:var(--r);padding:2rem .75rem .75rem;margin:.75rem 0;background:#fdfcfb;pointer-events:none;user-select:none}
+.tour-preview::before{content:"Example screen: Willa is made up";position:absolute;top:.5rem;left:.75rem;font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.tour-why{background:var(--info-l);color:var(--ink);border-radius:12px;padding:.75rem .9rem;margin:.75rem 0}
+.tour-why b{color:var(--info)}
+.dots{display:flex;gap:.35rem;flex-wrap:wrap;margin:.25rem 0 .5rem}
+.dots span{width:10px;height:10px;border-radius:50%;background:#ddd5d2}
+.dots span.on{background:var(--red)}
+.tour-nav{display:flex;gap:.5rem;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-top:1rem}
+.tour-cta{display:flex;align-items:center;gap:.9rem;background:#1d5fb4;border-radius:var(--r);padding:.95rem 1rem;margin:.9rem 0;color:#fff;text-decoration:none}
+.tour-cta:hover{background:#174d93}
+.tour-cta:focus-visible{outline:3px solid #0b2f5e;outline-offset:3px}
+.tour-cta .ico{flex:none;width:44px;height:44px;border-radius:50%;background:#fff;color:#1d5fb4;display:grid;place-items:center}
+.tour-cta .ico svg{width:20px;height:20px;margin-left:3px}
+.tour-cta .txt{flex:1;min-width:0}
+.tour-cta .txt b{display:block;font-size:1.08rem;color:#fff}
+.tour-cta .txt span{font-size:.9rem;color:#e6efff}
+.tour-cta .go{flex:none;background:#fff;color:#1d5fb4;border-radius:10px;padding:.55rem .9rem;font-weight:700;font-size:.92rem}
+@media (max-width:420px){.tour-cta .go{display:none}}
+.grid.two{grid-template-columns:1fr 1fr}
+@media (max-width:560px){.grid.two{grid-template-columns:1fr}}
+.stale-note{display:flex;gap:.6rem;align-items:center;justify-content:space-between;background:var(--warn-l);color:var(--warn);border:1px solid #f0d9a6;border-radius:12px;padding:.6rem .75rem;margin:.6rem 0;font-size:.92rem}
+.match{display:inline-block;background:#e6f3ea;color:#1f6b3a;font-weight:700;font-size:.8rem;border-radius:8px;padding:.2rem .5rem;margin:.1rem .2rem .3rem 0}
+.sup-list{margin:.2rem 0 .7rem 1.1rem;padding:0}
+.sup-list li{margin:.2rem 0}
+.btn.green{background:#1f7a3f;border-color:#1f7a3f;color:#fff}
+.btn.green:hover{background:#18632f}
+.btn.wide{width:100%;min-height:54px;font-size:1.05rem}
+.sugg-box{background:#f4f8f2;border:1px solid #cfe3c8;border-radius:12px;padding:.7rem .8rem;margin:.2rem 0 .8rem}
+.sugg-box .pill{margin:.2rem .1rem;text-align:left}
+.sugg-row{display:flex;gap:.6rem;align-items:center;justify-content:space-between;border-top:1px solid #dcebd6;padding:.5rem 0}
+.sugg-row:first-of-type{border-top:0}
+#print-area{display:none}
+@media print{
+  body *{visibility:hidden}
+  #print-area,#print-area *{visibility:visible}
+  #print-area{display:block;position:absolute;left:0;top:0;width:100%}
+  #print-area .doc{border:0;padding:0}
+  .ph{background:none;border:0}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<header class="top">
+  <div class="mark" aria-hidden="true">W</div>
+  <div class="brand">WillHelp<small>Tell me what you need. Let's take the next step.</small></div>
+  <div class="spacer"></div>
+  <button type="button" data-act="textsize" aria-label="Change text size">A<span aria-hidden="true">+</span></button>
+  <button type="button" data-act="go" data-to="#about">About</button>
+</header>
+<div id="demoBanner"></div>
+<div class="layout">
+  <nav class="main" aria-label="Main">
+    <a href="#home" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</a>
+    <a href="#story" data-nav="story"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>My Story</a>
+    <a href="#create" data-nav="create"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>Create</a>
+    <a href="#opps" data-nav="opps"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>Opportunities</a>
+    <a href="#support" data-nav="support"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-4.5-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.5-9 9-9 9z"/></svg>Support</a>
+  </nav>
+  <main id="main" tabindex="-1"></main>
+</div>
+<div id="print-area" aria-hidden="true"></div>
+<div id="live" class="sr-only" aria-live="polite" style="position:absolute;left:-9999px"></div>
+
+<script>
+"use strict";
+/* =====================================================================
+   WillHelp student app
+   - All student data stays in this browser (localStorage). Nothing is sent anywhere.
+   - INSTRUCTOR is disabled in this public student release.
+   ===================================================================== */
+
+const TODAY = new Date();
+const SEED = {"dataVersion": "2026-11-20", "reviewDays": 90, "settings": {"reportEmail": "", "precepTiming": "", "precepCoordinator": "", "precepProcess": ""}, "curriculum": {"source": "Simpson University BSN Curriculum Plan (PDF dated 8-12-25)", "sourceUrl": "https://simpsonu.edu/wp-content/uploads/2025/09/Nursing-Curriculum-Plan-8-12-25.pdf", "checked": "2026-11-16", "status": "Published four-year plan. Not confirmed as the schedule for any current cohort.", "terms": [{"id": "pre", "label": "Prerequisites (Years 1 and 2, fall)", "short": "Prerequisites"}, {"id": "y2s2", "label": "Year 2, second semester", "short": "First nursing semester"}, {"id": "y3s1", "label": "Year 3, first semester", "short": "Adult I semester"}, {"id": "y3s2", "label": "Year 3, second semester", "short": "Adult II semester"}, {"id": "y4s1", "label": "Year 4, first semester", "short": "Critical care semester"}, {"id": "y4s2", "label": "Year 4, second semester", "short": "Final semester"}], "courses": [{"code": "PREREQ", "name": "Nursing major prerequisites (anatomy, physiology, chemistry, microbiology, nutrition, statistics, lifespan)", "nick": "Prerequisites", "term": "pre", "clinicalPossible": false}, {"code": "NURS 2310", "name": "Foundations of Nursing & Professional Seminar", "nick": "Foundations", "term": "y2s2", "clinicalPossible": true}, {"code": "NURS 2320", "name": "Health Assessment & Nursing Skills", "nick": "Health Assessment", "term": "y2s2", "clinicalPossible": false}, {"code": "NURS 2330", "name": "Pathophysiology for Nurses", "nick": "Patho", "term": "y2s2", "clinicalPossible": false}, {"code": "NURS 2340", "name": "Nursing Care of the Older Adult", "nick": "Older Adult", "term": "y2s2", "clinicalPossible": true}, {"code": "NURS 3310", "name": "Nursing Care of the Adult I", "nick": "Adult I", "term": "y3s1", "clinicalPossible": true}, {"code": "NURS 3320", "name": "Pharmacology for Nurses", "nick": "Pharm", "term": "y3s1", "clinicalPossible": false}, {"code": "NURS 3330", "name": "Nursing Care for Mental Health & Professional Seminar", "nick": "Mental Health", "term": "y3s1", "clinicalPossible": true}, {"code": "NURS 3340", "name": "Evidence-Based Practice & Informatics for Nurses", "nick": "EBP", "term": "y3s1", "clinicalPossible": false}, {"code": "NURS 3350", "name": "Nursing Care of the Adult II", "nick": "Adult II", "term": "y3s2", "clinicalPossible": true}, {"code": "NURS 3360", "name": "Nursing Care of Maternal & Newborn", "nick": "OB", "term": "y3s2", "clinicalPossible": true}, {"code": "NURS 3370", "name": "Nursing Care of Children & Adolescents", "nick": "Peds", "term": "y3s2", "clinicalPossible": true}, {"code": "NURS 3380", "name": "Health Promotion", "nick": "Health Promotion", "term": "y3s2", "clinicalPossible": false}, {"code": "NURS 4310", "name": "Nursing Care of the Critically Ill Adult", "nick": "Critical Care", "term": "y4s1", "clinicalPossible": true}, {"code": "NURS 4320", "name": "Nursing Care for the Community & Public Health", "nick": "Community", "term": "y4s1", "clinicalPossible": true}, {"code": "NURS 4330", "name": "Nursing Research & Professional Seminar", "nick": "Research", "term": "y4s1", "clinicalPossible": false}, {"code": "NURS 4340", "name": "Leadership & Management in Nursing", "nick": "Leadership", "term": "y4s2", "clinicalPossible": true}, {"code": "NURS 4350W", "name": "Nursing Capstone & Professional Seminar", "nick": "Capstone", "term": "y4s2", "clinicalPossible": false}, {"code": "NURS 4360", "name": "Preparation for Professional Practice", "nick": "Prep for Practice", "term": "y4s2", "clinicalPossible": false}], "adminNotes": "The 2025-2026 plan PDF lists NURS 4310 as 'Nursing Care of the Critical III Adult' (likely a typo for Critically Ill). WillHelp does not map an 'Adult III' nickname to any course until Simpson confirms it."}, "rules": [{"id": "start", "priority": 10, "when": {"notStarted": ["NURS 2310"]}, "title": "Get a basic résumé started", "body": "Starting nursing school is a good time to put your work and volunteer history in one place. It helps with student jobs and scholarships later.", "link": "#create-resume", "linkLabel": "Build my résumé"}, {"id": "start-support", "priority": 30, "when": {"notStarted": ["NURS 2310"]}, "title": "Know where support lives before you need it", "body": "Tutoring, counseling, and accommodations at Simpson are free to students. Take a minute to see what's there.", "link": "#support", "linkLabel": "See support"}, {"id": "cna", "priority": 5, "when": {"completed": ["NURS 2310"], "untilAllCompleted": ["NURS 4360"], "unlessHeld": "cna"}, "title": "Check the CNA equivalency path", "body": "Your nursing coursework may give you another path toward CNA certification. Tell me whether you'd like help checking the requirements.", "link": "#create-cna", "linkLabel": "Check the requirements", "tag": "California CDPH pathway. Not automatic certification."}, {"id": "adult1", "priority": 8, "when": {"completed": ["NURS 3310"], "untilAllCompleted": ["NURS 3350"]}, "title": "Add your Adult I clinical to your résumé", "body": "Update your supervised student clinical experience, then look at jobs whose listed requirements match what you actually hold.", "link": "#create-resume", "linkLabel": "Update my résumé"}, {"id": "adult2", "priority": 9, "when": {"completed": ["NURS 3350"], "untilAllCompleted": ["NURS 4310"]}, "title": "Refresh documents and save your best examples", "body": "Write down two or three moments from clinical (no patient details) while they're fresh. They become interview answers and recommendation material.", "link": "#story-accomplishments", "linkLabel": "Save an example"}, {"id": "specialty", "priority": 20, "when": {"anyActive": ["NURS 3330", "NURS 3360", "NURS 3370"], "untilAllCompleted": ["NURS 3330", "NURS 3360", "NURS 3370"]}, "title": "Notice what kind of nursing pulls at you", "body": "Specialty rotations are a good time to note interests. It feeds your preceptorship preferences later.", "link": "#story-goals", "linkLabel": "Add my interests"}, {"id": "precep", "priority": 6, "when": {"anyActive": ["NURS 3350", "NURS 4310"], "untilAllCompleted": ["NURS 4340"]}, "title": "Start preparing for preceptorship", "body": "Tell me what kind of nursing you'd like to explore in your preceptorship. We can get your materials ready and check how Simpson handles placements.", "link": "#create-precep", "linkLabel": "Prepare for preceptorship", "tag": "Suggested preparation, not a school requirement."}, {"id": "capstone", "priority": 7, "when": {"anyActive": ["NURS 4340", "NURS 4350W"], "untilAllCompleted": ["NURS 4360"]}, "title": "Line up references and new grad applications", "body": "Ask recommenders early and give them a clear packet. New grad residency postings can open months before graduation.", "link": "#create-rec", "linkLabel": "Request a recommendation"}, {"id": "grad", "priority": 4, "when": {"anyActive": ["NURS 4360"]}, "title": "Plan your licensure steps and costs", "body": "Eight steps from your Board application to your first RN shift, with costs and timing. Confirm the timing with the School of Nursing.", "link": "#journey-license", "linkLabel": "Open my RN license steps"}, {"id": "graduated", "priority": 5, "when": {"completed": ["NURS 4360"]}, "title": "After licensure: update credentials and compare offers", "body": "Add your RN license to My Story once it's issued. When comparing offers, look at orientation, preceptor support, schedule, commute, benefits, and any contract terms, not just pay. Loan repayment programs like HCAI's BSNLRP open to licensed RNs.", "link": "#opps-funding", "linkLabel": "See repayment help"}], "resources": [{"id": "mercy-ua", "cat": "job", "priority": 1, "jobType": "CNA / nursing assistant", "org": "Mercy Medical Center Redding (Dignity Health)", "title": "Unit Aide (nursing assistant)", "location": "Redding", "status": "unverified", "verified": "2026-11-17", "deadline": "Not listed", "pay": "$29.41 to $34.70 an hour across recent Redding Unit Aide postings", "schedule": "Varies by posting: days or nights, 12-hour shifts, part-time to full-time", "required": [{"key": "bls", "label": "AHA BLS"}, {"key": null, "label": "Acute care nursing assistant experience, or completion of CNA, LVN, or first-year RN courses (wording from one posting; others ask for previous Unit Aide experience)"}], "preferred": [{"key": "cna", "label": "California CNA certificate"}], "obligations": "None stated.", "cost": "Free", "costItems": [], "source": "https://careers-commonspirit.icims.com/jobs/425629/unit-aide/job", "sourceName": "CommonSpirit careers (Mercy Redding Unit Aide posting)", "fitNote": "One posting says first-year RN coursework can count, and that the hospital may train someone without experience when it can. Requirements differ between postings, so read each one."}, {"id": "mercy-uc", "cat": "job", "priority": 1, "jobType": "Unit clerk / health unit coordinator", "org": "Mercy Medical Center Redding (Dignity Health)", "title": "Unit Coordinator II / Unit Tech", "location": "Redding", "status": "unverified", "verified": "2026-11-17", "deadline": "Not listed", "pay": "$33.35 to $37.49 an hour on the Emergency Services posting", "schedule": "Part-time, varied days and hours (Emergency Services posting)", "required": [{"key": null, "label": "Previous Unit Coordinator II or tech experience, or equivalent experience in an acute care facility"}, {"key": "bls", "label": "AHA BLS"}], "preferred": [{"key": null, "label": "Two years of college"}], "obligations": "None stated.", "cost": "Free", "costItems": [], "source": "https://careers-commonspirit.icims.com/jobs/472425/unit-coordinator-ii-unit-tech/job", "sourceName": "CommonSpirit careers (Mercy Redding posting)", "fitNote": "Combines unit secretary work with some direct patient care. Postings ask for prior acute care experience, so this often fits after you've worked as a Unit Aide."}, {"id": "mercy-ma", "cat": "job", "priority": 1, "jobType": "Medical assistant", "org": "Dignity Health Medical Group North State (Mercy Redding's affiliated clinics)", "title": "Medical Assistant (clinic)", "location": "Redding", "status": "unverified", "verified": "2026-11-17", "deadline": "Not listed", "pay": "$25.00 to $27.38 an hour on the Endocrinology Clinic posting", "schedule": "Monday to Friday, 8 AM to 5 PM", "required": [{"key": null, "label": "Completion of a formal medical assistant program (or equivalent military training)"}, {"key": null, "label": "Medical assistant experience, per most postings"}], "preferred": [], "obligations": "None stated.", "cost": "Free", "costItems": [], "source": "https://careers-commonspirit.icims.com/jobs/488350/medical-assistant/job", "sourceName": "CommonSpirit careers (Dignity Health Medical Group posting)", "fitNote": "These clinic jobs ask for a formal MA program. Nursing school alone usually doesn't meet that, so ask the hiring manager before applying."}, {"id": "mercy-hospice", "cat": "job", "priority": 1, "jobType": "CNA / nursing assistant", "org": "Mercy Medical Center Redding (Mercy Home Health and Hospice)", "title": "Hospice Aide", "location": "Redding", "status": "unverified", "verified": "2026-11-17", "deadline": "Not listed", "pay": "$31.04 to $34.84 an hour", "schedule": "Monday to Friday, 8 AM to 5 PM", "required": [{"key": "cna", "label": "California CNA certificate"}, {"key": null, "label": "California Home Health Aide certificate"}], "preferred": [], "obligations": "None stated.", "cost": "Free", "costItems": [], "source": "https://careers-commonspirit.icims.com/jobs/478217/hospice-aide/job", "sourceName": "CommonSpirit careers (Mercy Redding posting)", "fitNote": "Needs both a CNA and a separate Home Health Aide certificate."}, {"id": "srmc-na", "cat": "job", "org": "Shasta Regional Medical Center (Prime Healthcare)", "title": "Nursing Assistant (per diem posting example)", "location": "Redding", "status": "unverified", "verified": "2026-11-17", "deadline": "Not listed", "pay": "Not published in the posting text reviewed", "schedule": "Per diem, variable shift", "required": [{"key": "bls30", "label": "BLS within 30 days of hire"}], "preferred": [{"key": "cna", "label": "CNA certificate"}, {"key": null, "label": "Medical terminology"}, {"key": null, "label": "Six months acute care or physician office experience"}], "obligations": "None stated.", "cost": "Free", "costItems": [], "source": "https://careers-primehealthcare.icims.com/jobs/274668/nursing-assistant---ortho-neuro/job", "sourceName": "Prime Healthcare careers", "fitNote": "Listed as an unlicensed, non-certified assistive role. A CNA is preferred, not required, in this posting.", "jobType": "CNA / nursing assistant"}, {"id": "mercy-phleb", "cat": "job", "org": "Mercy Medical Center Redding (Dignity Health)", "title": "Phlebotomist (past posting seen on a job board)", "location": "Redding", "status": "unverified", "verified": "2026-11-16", "deadline": "Not listed", "pay": "Not published in the text reviewed", "schedule": "Not listed", "required": [{"key": "cpt1", "label": "California CPT1 license"}, {"key": "bls", "label": "AHA BLS"}, {"key": null, "label": "Completion of a California-approved phlebotomy program"}], "preferred": [], "obligations": "None stated.", "cost": "Free", "costItems": [], "source": "https://commonspirit.careers/", "sourceName": "CommonSpirit careers (search Redding)", "fitNote": "Requirements came from a job-board copy of a past posting. Confirm on the employer site. Nursing clinical skills do not substitute for the state CPT1 license.", "jobType": "Phlebotomist", "priority": 1}, {"id": "mercy-resid", "cat": "job", "org": "Mercy Medical Center Redding (Dignity Health)", "title": "RN New Grad Clinical Residency Program", "location": "Redding", "status": "closed", "verified": "2026-11-17", "deadline": "The 2026 posting window was March 12 to 17, 2026, for a July 2026 cohort. Watch the page for the next one.", "pay": "$52.59 to $71.48 an hour on a 2025 Redding posting", "schedule": "3 x 12 hour shifts on the 2025 posting", "required": [{"key": "rn", "label": "Newly licensed RN. See the posting for the full list."}], "preferred": [], "obligations": "Check the posting for any commitment terms.", "cost": "Free", "costItems": [], "source": "https://www.dignityhealth.org/north-state/locations/mercy-redding/rnresidencyprogram", "sourceName": "Dignity Health Mercy Redding RN residency page", "fitNote": "For after graduation and licensure.", "later": true, "jobType": "New grad RN residency", "priority": 1}, {"id": "schc", "cat": "job", "org": "Shasta Community Health Center", "title": "Careers (federally qualified health center)", "location": "Redding and Shasta County", "status": "unverified", "verified": "2026-11-17", "deadline": "Varies", "pay": "Varies by posting", "schedule": "Varies", "required": [{"key": null, "label": "Varies by posting"}], "preferred": [], "obligations": "Varies.", "cost": "Free", "costItems": [], "source": "", "sourceName": "Official careers link not verified yet", "fitNote": "Search for Shasta Community Health Center careers and confirm you're on their own site. As an FQHC it can count as a qualifying site for some HCAI service obligations; confirm with HCAI."}, {"id": "su-campus", "cat": "job", "org": "Simpson University Human Resources", "title": "On-campus student employment", "location": "Simpson campus", "status": "ongoing", "verified": "2026-11-17", "deadline": "Varies", "pay": "Varies", "schedule": "Part-time around classes", "required": [{"key": "su", "label": "Full-time Simpson student"}], "preferred": [], "obligations": "Students find their own campus job. Full-time Simpson students apply through HR, then complete a Student Employment Agreement for each job.", "cost": "Free", "costItems": [], "source": "https://simpsonu.edu/hr/", "sourceName": "Simpson Human Resources (Student Employees)", "fitNote": "Students secure their own campus jobs. Ask the School of Nursing about paid tutoring or lab assistant roles.", "jobType": "Campus job (tutor, lab assistant)"}, {"id": "bsnsp", "cat": "funding", "org": "California HCAI", "title": "Bachelor of Science Nursing Scholarship Program (BSNSP)", "location": "Statewide", "status": "closed", "verified": "2026-11-16", "deadline": "2026 cycle closed October 2, 2026. Watch for the next cycle.", "pay": "Up to $10,000", "schedule": "Annual cycle", "required": [{"key": "enrolled", "label": "Enrolled in a BSN program leading to RN licensure"}, {"key": null, "label": "California resident"}, {"key": null, "label": "GPA 2.0 or higher"}, {"key": null, "label": "No other service obligation"}], "preferred": [], "obligations": "One year full-time direct patient care (at least 32 hours a week) at a qualifying site, starting within six months of graduation. You can hold only one HCAI service obligation at a time.", "cost": "Free", "costItems": [], "source": "https://hcai.ca.gov/loans-scholarships-grants/scholarships/bsnsp", "sourceName": "HCAI", "fitNote": "Conditional funding with a service obligation. Read the grant guide before applying."}, {"id": "bsnlrp", "cat": "funding", "org": "California HCAI", "title": "BSN Loan Repayment Program (BSNLRP)", "location": "Statewide", "status": "closed", "verified": "2026-11-16", "deadline": "2026 window was May 1 to June 5, 2026.", "pay": "See program guide", "schedule": "Annual cycle", "required": [{"key": "rn", "label": "Licensed RN"}, {"key": null, "label": "Qualifying employment"}], "preferred": [], "obligations": "Service-based repayment assistance. Terms in the program guide.", "cost": "Free", "costItems": [], "source": "https://hcai.ca.gov/loans-scholarships-grants/loan-repayment/bsnlrp/", "sourceName": "HCAI", "fitNote": "Help managing debt after school, not help paying for school.", "later": true}, {"id": "su-fafsa", "cat": "funding", "org": "Simpson University Financial Aid", "title": "Federal, state, and institutional aid (FAFSA school code 001291)", "location": "Simpson", "status": "ongoing", "verified": "2026-11-17", "deadline": "File the FAFSA every year", "pay": "Varies", "schedule": "Annual", "required": [{"key": "su", "label": "Simpson student"}], "preferred": [], "obligations": "Satisfactory Academic Progress: 2.0 GPA and 70% completion pace, checked each term.", "cost": "Free", "costItems": [], "source": "https://simpsonu.edu/filing-the-fafsa/", "sourceName": "Simpson: Filing the FAFSA", "fitNote": "Filing the FAFSA puts you in consideration for most Simpson scholarships. Check MySU for your aid status."}, {"id": "studentaid", "cat": "funding", "org": "U.S. Department of Education", "title": "StudentAid.gov: loans, repayment plans, and forgiveness information", "location": "Online", "status": "ongoing", "verified": "2026-11-16", "deadline": "n/a", "pay": "n/a", "schedule": "n/a", "required": [], "preferred": [], "obligations": "Do not refinance federal loans without understanding which protections you lose.", "cost": "Free", "costItems": [], "source": "https://studentaid.gov/", "sourceName": "StudentAid.gov", "fitNote": "Official source for federal loan questions."}, {"id": "kiser", "cat": "training", "sub": "bls", "org": "Kiser CPR & First Aid", "title": "BLS, ACLS, and EKG classes", "location": "Redding (listings show more than one address; confirm)", "status": "unverified", "verified": "2026-11-20", "deadline": "See provider schedule", "pay": "", "schedule": "See provider", "courseType": "Package (BLS, ACLS, EKG)", "format": "Not confirmed", "issuer": "American Heart Association (confirm)", "includes": "Not confirmed. Ask what the price covers.", "required": [], "preferred": [], "obligations": "", "cost": "Cost not verified", "costItems": [{"label": "Course package", "amount": 100, "confirmed": false, "note": "Lead from Will's notes: advertised from $100, books extra"}, {"label": "Books", "amount": null, "confirmed": false}], "source": "https://www.kisercpr.com/", "sourceName": "Kiser CPR (kisercpr.com)", "fitNote": "Shasta College lists the phone above; other listings show (530) 607-6979. Has advertised a Simpson student package (starting price, books extra). A starting price is not the full package price.", "phone": "(530) 921-1455"}, {"id": "sts", "cat": "training", "sub": "bls", "org": "Safety Training Seminars", "title": "AHA BLS and ACLS (Redding training center)", "location": "Redding, 1135 Pine St, Suite 207", "status": "unverified", "verified": "2026-11-16", "deadline": "Classes listed daily", "pay": "", "schedule": "See enrollment site", "courseType": "BLS (initial or renewal), ACLS", "format": "Blended: online course plus skills session. Some skills testing uses a virtual instructor.", "issuer": "American Heart Association", "includes": "Provider says BLS price normally includes the AHA eCard.", "required": [], "preferred": [], "obligations": "", "cost": "Paid", "costItems": [{"label": "BLS", "amount": 120, "confirmed": false, "note": "Lead from Will's notes"}, {"label": "ACLS", "amount": 290, "confirmed": false, "note": "Seen on the provider's Shasta County page in a search result"}], "source": "https://safetytrainingseminars.com/redding-cpr-bls-classes/", "sourceName": "Safety Training Seminars", "fitNote": "Advertises a $25 student discount for Shasta College nursing students. Ask whether Simpson students qualify. Confirm whether the skills session is in person."}, {"id": "cee", "cat": "training", "sub": "bls", "org": "Center for Excellence in Education", "title": "BLS and ACLS (Redding sessions)", "location": "Redding (confirm)", "status": "unverified", "verified": "2026-11-20", "deadline": "See provider", "pay": "", "schedule": "See provider", "courseType": "BLS, ACLS initial, ACLS renewal", "format": "Not confirmed", "issuer": "Confirm", "includes": "Confirm materials and access.", "required": [], "preferred": [], "obligations": "", "cost": "Cost not verified", "costItems": [{"label": "BLS", "amount": 40, "confirmed": false, "note": "Lead from Will's notes"}, {"label": "ACLS initial", "amount": 200, "confirmed": false, "note": "Lead"}, {"label": "ACLS renewal", "amount": 125, "confirmed": false, "note": "Lead"}], "source": "https://www.ceemed.com/", "sourceName": "CEE (ceemed.com), listed by Shasta College", "fitNote": "Contact listed by Shasta College: Peggy Tyranski, pstyranski@gmail.com. Confirm sessions, location, card issuer, and price directly.", "phone": "(530) 873-6683"}, {"cat": "training", "sub": "bls", "status": "ongoing", "verified": "2026-11-20", "deadline": "n/a", "pay": "", "schedule": "Every listed AHA class, all providers", "required": [], "preferred": [], "obligations": "", "costItems": [], "id": "aha-finder", "pin": true, "org": "American Heart Association", "title": "Find any AHA class near Redding", "location": "Search by ZIP code (Redding: 96001, 96002, 96003)", "courseType": "BLS, ACLS, PALS, and more", "format": "Shows in-person, blended, and skills-only classes", "issuer": "American Heart Association", "includes": "Each listing shows the provider's own price and format.", "cost": "Varies by provider", "source": "https://atlas.heart.org/", "sourceName": "AHA Find a Course (atlas.heart.org)", "fitNote": "This is the AHA's own class search. It lists AHA-authorized instructors and training centers, including ones not shown here. You can also verify an AHA eCard on the same site."}, {"cat": "training", "sub": "bls", "status": "unverified", "verified": "2026-11-20", "deadline": "See provider", "pay": "", "schedule": "See provider", "required": [], "preferred": [], "obligations": "", "costItems": [], "id": "aplus", "org": "A Plus Safety LLC", "title": "CPR and safety classes (Redding classroom)", "location": "Redding, 2765 Bechelli Lane", "phone": "(530) 222-1210", "courseType": "Ask which healthcare-provider BLS courses are offered", "format": "Classroom in Redding, or at your location by appointment", "issuer": "Confirm AHA", "includes": "Confirm with provider.", "cost": "Cost not verified", "source": "https://www.shastacollege.edu/academics/divisions-departments/health-sciences-hsup/health-and-safety-clinical-requirements/cpr-certification-resources/", "sourceName": "Shasta College CPR resource list", "fitNote": "Listed by Shasta College nursing as a local option. Ask whether they teach AHA BLS Provider and whether ACLS is offered."}, {"cat": "training", "sub": "bls", "status": "unverified", "verified": "2026-11-20", "deadline": "See provider", "pay": "", "schedule": "See provider", "required": [], "preferred": [], "obligations": "", "costItems": [], "id": "meded", "org": "Med Ed (Redding)", "title": "AHA BLS, Heartsaver CPR, First Aid", "location": "Redding, 1615 Continental Street (per Shasta College list)", "phone": "(530) 604-2848", "courseType": "BLS", "format": "In person", "issuer": "American Heart Association", "includes": "Confirm with provider.", "cost": "Cost not verified", "source": "https://www.shastacollege.edu/academics/divisions-departments/health-sciences-hsup/health-and-safety-clinical-requirements/cpr-certification-resources/", "sourceName": "Shasta College CPR resource list", "fitNote": "Shasta College lists the phone above and donnaconrad@shasta.com. The provider's social page lists (530) 276-9164. Confirm which number is current. ACLS not confirmed."}, {"cat": "training", "sub": "bls", "status": "unverified", "verified": "2026-11-20", "deadline": "See provider", "pay": "", "schedule": "See provider", "required": [], "preferred": [], "obligations": "", "costItems": [], "id": "shasta-faid", "org": "Shasta College", "title": "FAID 133 CPR course and community CPR classes", "location": "Redding, 11555 Old Oregon Trail", "courseType": "CPR (Healthcare Provider level per course listing; confirm)", "format": "Classroom", "issuer": "American Heart Association (confirm)", "includes": "Confirm whether non-Shasta students can enroll.", "cost": "Cost not verified", "source": "https://www.shastacollege.edu/academics/divisions-departments/health-sciences-hsup/health-and-safety-clinical-requirements/cpr-certification-resources/", "sourceName": "Shasta College CPR resource list", "fitNote": "A recent community education CPR listing was Heartsaver, not BLS Provider. Check the course name and whether non-Shasta students can enroll."}, {"id": "phleb-train", "cat": "training", "sub": "cert", "org": "CDPH Laboratory Field Services", "title": "Phlebotomy (CPT1) training requirements", "location": "California", "status": "ongoing", "verified": "2026-11-16", "deadline": "n/a", "pay": "", "schedule": "", "courseType": "State certification", "format": "Approved program only", "issuer": "California Department of Public Health", "includes": "Requires an approved program with 40 hours of clinical practice including at least 50 venipunctures and 10 skin punctures, plus the state application and exam steps.", "required": [], "preferred": [], "obligations": "", "cost": "Paid", "costItems": [{"label": "Program tuition (varies by approved school)", "amount": null, "confirmed": false}, {"label": "Exam and state application fees", "amount": null, "confirmed": false}], "source": "https://www.cdph.ca.gov/Programs/OSPHLD/LFS/Pages/Phlebotomist.aspx", "sourceName": "CDPH", "fitNote": "Verify a program is on the CDPH approved list, plus its clinical placement and total cost, before enrolling."}], "support": [{"id": "911", "group": "Right now", "name": "Emergency: call 911. Mental health crisis: call or text 988.", "detail": "WillHelp is not an emergency service and is not monitored.", "phone": "911", "url": "https://988lifeline.org/", "verified": "2026-11-17"}, {"id": "safety", "group": "Right now", "name": "Simpson Campus Safety", "detail": "Call any time, day or night, for urgent campus safety issues. Ask for a Safewalk escort to the parking lots if you don't want to walk alone.", "phone": "530-941-7592", "url": "https://simpsonu.edu/?p=3084", "verified": "2026-11-17", "cost": "Free"}, {"id": "scmh", "group": "Right now", "name": "Shasta County Crisis Mental Health (24 hours)", "detail": "Answered by Health and Human Services Agency staff.", "phone": "530-225-5252", "url": "https://shastacounty.gov/node/2976", "verified": "2026-11-17", "cost": "Free"}, {"id": "counsel", "group": "Counseling and well-being", "name": "Mental health counseling (NAMHS at Simpson)", "detail": "Simpson partners with North American Mental Health Services for counseling on campus or by telehealth. The student handbook lists the Counseling Center in Suite 202A, second floor of the library, free for students.", "phone": "530-395-1238", "email": "counseling@simpsonu.edu", "url": "https://simpsonu.edu/student-development/student-success-center/#:~:text=Mental%20Health%20Services", "verified": "2026-11-17", "cost": "Included with Simpson enrollment"}, {"id": "ssc", "group": "Tutoring and campus help", "name": "Student Success Center", "detail": "Grubbs Learning Center, second floor of the library. Monday to Friday, 8 AM to 5 PM (closed during chapel). Hub for tutoring, advising, accessibility, and career help.", "phone": "530-226-4780", "email": "studentsuccess@simpsonu.edu", "url": "https://simpsonu.edu/student-development/student-success-center/", "verified": "2026-11-17", "cost": "Included with Simpson enrollment"}, {"id": "asc", "group": "Tutoring and campus help", "name": "Academic Success Center", "detail": "Tutoring, academic coaching, study groups, and exam proctoring. Free to all Simpson students.", "phone": "530-226-4780", "url": "https://simpsonu.edu/student-development/student-success-center/#:~:text=Academic%20Success%20Center", "verified": "2026-11-17", "cost": "Included with Simpson enrollment"}, {"id": "access", "group": "Accessibility", "name": "Accessibility Services (accommodations)", "detail": "Disability accommodations are handled through the Academic Success Center in the Student Success Center. Contact Dr. Erin Gordon.", "email": "egordon@simpsonu.edu", "phone": "530-226-4780", "url": "https://simpsonu.edu/student-development/student-success-center/#:~:text=disability%20accommodations", "verified": "2026-11-17", "cost": "Included with Simpson enrollment"}, {"id": "career", "group": "Career", "name": "Internships, Career Development, and Calling", "detail": "Résumé and cover letter help, coaching, headshots, and a free Career Closet for interview clothes. Director: Chase Rossman.", "email": "crossman@simpsonu.edu", "url": "https://simpsonu.edu/internships/", "verified": "2026-11-17", "cost": "Included with Simpson enrollment"}, {"id": "vets", "group": "Veterans", "name": "Veterans Success Center", "detail": "California's largest student veteran center in the North State. It's moving into the new Business, Technology and Engineering Building, so call or email before you go.", "phone": "530-226-4140", "email": "vets@simpsonu.edu", "url": "https://simpsonu.edu/vets/vsc", "verified": "2026-11-17", "cost": "Included with Simpson enrollment"}, {"id": "trio", "group": "Tutoring and campus help", "name": "TRIO Student Support Services", "detail": "For first-generation, low-income, or disabled students. Workshops and mentorship. Director: Dinah Aming'a.", "email": "daminga@simpsonu.edu", "url": "https://simpsonu.edu/student-development/student-success-center/#:~:text=TRIO%20Student%20Support%20Services", "verified": "2026-11-17", "cost": "Free"}, {"id": "foodbank", "group": "Food", "name": "Dignity Health Connected Living Food Bank", "detail": "Shasta County's designated food bank. Walk in Monday to Friday, 9 AM to 3 PM, at 100 Mercy Oaks Drive for a bag with about 2 days of food. Larger monthly distributions run at sites around the county; call for dates. No pre-registration needed.", "phone": "530-223-6034", "url": "https://www.dignityhealth.org/shastafoodbank", "verified": "2026-11-17", "cost": "Free"}, {"id": "salvation", "group": "Food", "name": "Salvation Army food bank", "detail": "2691 Larkspur Lane, Redding. County list showed Mon, Wed, Thu 9 to 11:30 AM; bring proof of age, address, and income. That list is dated February 2024, so call first.", "phone": "530-222-2207", "url": "https://www.shastacounty.gov/sites/default/files/fileattachments/health_amp_human_services_agency/page/3735/emergencyfoodbanksfinal20240229.pdf", "verified": "2024-02-29", "cost": "Free"}, {"id": "calfresh", "group": "Food", "name": "CalFresh food benefits", "detail": "Apply by phone, online at BenefitsCal, or at a Shasta County office. Some college students qualify.", "phone": "1-877-652-0731", "url": "https://benefitscal.com/", "verified": "2026-11-17", "cost": "Free"}, {"id": "211", "group": "Housing, childcare, transportation, emergency aid", "name": "211 Shasta (United Way of Northern California)", "detail": "Dial 211 or text your ZIP code to 898211 for housing, childcare, transportation, utility, and emergency aid referrals. From outside the county: 1-855-211-7822.", "phone": "211", "url": "https://211norcal.org/", "verified": "2026-11-17", "cost": "Free"}, {"id": "scoe", "group": "Housing, childcare, transportation, emergency aid", "name": "Child Care Resource and Referral (Shasta County Office of Education)", "detail": "Help finding and paying for child care. Referral line Monday to Friday, 8 AM to 5 PM. Sources list different office addresses (43 Hilltop Drive and 1644 Magnolia Avenue), so call before going in person.", "phone": "530-225-0200", "url": "https://www.cde.ca.gov/sp/cd/re/shastarr.asp", "verified": "2026-11-17", "cost": "Free"}, {"id": "spirit", "group": "Spiritual support (optional)", "name": "Simpson Spiritual Formation and Chapel", "detail": "Chapel, evening gatherings like Encounter, Alpha, and FCA, small groups, and help connecting with a local church. Church attendance can count toward your Spiritual Formation points; ask whether your church is on the approved list.", "items": ["Director of Spiritual Formation: Natalie Goens"], "email": "ngoens@simpsonu.edu", "url": "https://simpsonu.edu/student-development/spiritual-formation/", "verified": "2026-11-17", "cost": "Included with Simpson enrollment"}, {"id": "pathway", "group": "Spiritual support (optional)", "name": "Pathway Church Redding", "detail": "A Christian and Missionary Alliance church, the same family of churches Simpson belongs to. 777 Loma Vista Drive, Redding. Services Saturday at 5 PM and Sunday at 9:30 and 11:15 AM, in person or online.", "items": ["College and Young Adult Ministry: Sundays after the second service, around 12:30 PM", "Sunday prayer gatherings: most Sundays at 7:45 AM", "Life Groups: small groups that meet on different days and times", "Celebrate Recovery: Tuesdays at 7 PM", "For student moms: Mom2Mom and the True Vine mom support group", "Women's Coffee and Conversation: Mondays at 9 AM", "Sermons anytime on the Pathway Church Podcast and YouTube"], "note": "Group days and times come from a November 2025 church bulletin and the young adult ministry's sign-up form. Call or email to confirm before you go.", "phone": "530-221-5683", "email": "hello@pathwaychurch.life", "url": "https://www.pathwaychurch.life", "verified": "2026-11-17", "cost": "Free"}], "roles": [{"id": "na", "name": "Nursing assistant (hospital, CNA preferred)", "req": [{"key": "bls", "label": "AHA BLS (Shasta Regional allows 30 days after hire)"}], "pref": ["CNA certificate", "Acute care experience"], "verify": "The hiring employer", "apply": "mercy-ua", "source": "Mercy Redding Unit Aide and Shasta Regional Nursing Assistant postings", "training": "Some Mercy Unit Aide postings accept completion of first-year RN courses. A CNA strengthens the application.", "verified": true, "jobType": "CNA / nursing assistant"}, {"id": "cna", "name": "Certified nursing assistant (CNA)", "req": [{"key": "cna", "label": "California CNA certificate (CDPH)"}], "pref": [], "verify": "CDPH Licensing and Certification", "apply": null, "source": "CDPH", "training": "After Foundations, the CDPH equivalency path may apply. You still need CDPH approval and the competency exam.", "verified": true, "link": "#create-cna", "jobType": "CNA / nursing assistant"}, {"id": "phleb", "name": "Phlebotomist", "req": [{"key": "cpt1", "label": "California CPT1 license"}, {"key": "bls", "label": "AHA BLS"}], "pref": [], "verify": "CDPH Laboratory Field Services and the employer", "apply": "mercy-phleb", "source": "Mercy Redding posting and CDPH", "training": "CDPH-approved program with 40 hours clinical practice, exam, and state application.", "verified": true, "jobType": "Phlebotomist"}, {"id": "ma", "name": "Medical assistant", "req": [{"key": null, "label": "Employer-specific. California does not generally require MA certification, but employers may require training or credentials."}], "pref": [], "verify": "The employer, under Medical Board of California rules", "apply": "mercy-ma", "source": "Medical Board of California and Dignity Health Medical Group postings", "training": "Training and supervision rules apply (16 CCR 1366.3). Nursing enrollment does not automatically qualify you for MA duties.", "verified": true, "url": "https://www.mbc.ca.gov/Licensing/Physicians-and-Surgeons/Practice-Information/Medical-Assistants.aspx", "jobType": "Medical assistant"}, {"id": "campus", "name": "Campus job, tutor, or lab assistant", "req": [{"key": "su", "label": "Full-time Simpson student"}], "pref": [], "verify": "Simpson HR and the hiring department", "apply": "su-campus", "source": "Simpson HR", "training": "None", "verified": true, "jobType": "Campus job (tutor, lab assistant)"}, {"id": "newgrad", "name": "New graduate RN residency", "req": [{"key": "rn", "label": "California RN license"}], "pref": [], "verify": "The employer and the California BRN", "apply": "mercy-resid", "source": "Mercy Redding", "training": "Graduate and pass the NCLEX-RN.", "verified": true, "later": true, "jobType": "New grad RN residency"}, {"id": "extern", "name": "Student nurse extern", "req": [], "pref": [], "verify": "The employer and the School of Nursing", "apply": null, "source": "No current Redding extern posting verified", "training": "Unknown until a local posting is verified.", "verified": false, "jobType": "Student nurse extern"}, {"id": "sitter", "name": "Patient sitter or safety observer", "req": [], "pref": [], "verify": "The employer", "apply": null, "source": "Not yet researched", "verified": false, "jobType": "Patient sitter / safety observer"}, {"id": "clerk", "name": "Unit clerk or health unit coordinator", "req": [{"key": null, "label": "Previous unit coordinator or tech experience in acute care"}, {"key": "bls", "label": "AHA BLS"}], "pref": [], "verify": "The employer", "apply": "mercy-uc", "source": "Mercy Redding Unit Coordinator II / Unit Tech posting", "verified": true, "jobType": "Unit clerk / health unit coordinator", "training": "Usually comes after hospital experience, such as working as a Unit Aide."}, {"id": "pct", "name": "Patient care technician", "req": [], "pref": [], "verify": "The employer", "apply": null, "source": "Not yet researched", "verified": false, "jobType": "Patient care technician"}, {"id": "tele", "name": "Monitor, telemetry, or EKG technician", "req": [], "pref": [], "verify": "The employer", "apply": null, "source": "Not yet researched", "verified": false, "jobType": "Monitor / telemetry technician"}, {"id": "edtech", "name": "Emergency department technician", "req": [], "pref": [], "verify": "The employer", "apply": null, "source": "Not yet researched", "verified": false, "jobType": "Emergency department technician"}, {"id": "emt", "name": "EMT", "req": [{"key": "emt", "label": "California EMT certification"}], "pref": [], "verify": "Local EMS agency and the employer", "apply": null, "source": "Not yet researched locally", "training": "Separate EMT course and certification.", "verified": false, "jobType": "EMT"}, {"id": "transport", "name": "Patient transporter", "req": [], "pref": [], "verify": "The employer", "apply": null, "source": "Not yet researched", "verified": false, "jobType": "Patient transporter"}, {"id": "scribe", "name": "Medical scribe", "req": [], "pref": [], "verify": "The employer", "apply": null, "source": "Not yet researched", "verified": false, "jobType": "Medical scribe"}, {"id": "access", "name": "Patient access or registration", "req": [], "pref": [], "verify": "The employer", "apply": null, "source": "Not yet researched", "verified": false, "jobType": "Patient access / registration"}], "license": {"checked": "2026-11-20", "feeChange": {"date": "2027-02-01", "text": "The NCLEX registration fee goes up to $350 for registrations completed on or after February 1, 2027. The date you register sets the fee, not your exam date.", "source": "https://www.pearsonvue.com/us/en/nclex/contact.html"}, "steps": [{"id": "lic-ask", "when": "Final semester", "title": "Ask Simpson when to apply", "body": "Ask the program director or your final-semester faculty when Simpson wants you to submit your Board application, and for Simpson's NCLEX program code (you need it for Pearson VUE). Simpson sends your transcript to the Board electronically when you complete the program. You don't send it yourself.", "cost": "", "link": "https://rn.ca.gov/applicants/lic-exam.shtml", "linkLabel": "Board: licensure by exam"}, {"id": "lic-breeze", "when": "When Simpson says (the Board's packet suggests 6 to 8 weeks before you want to test)", "title": "Apply to the California Board of Registered Nursing in BreEZe", "body": "Create a BreEZe account and choose \"RN Initial Exam Application.\" Attach every document it asks for so you don't get a deficiency letter. Pay by credit card. Fees are non-refundable. If you need testing accommodations, the request form goes with this application.", "cost": "$300 application fee (California graduate)", "link": "https://www.breeze.ca.gov/", "linkLabel": "Open BreEZe"}, {"id": "lic-livescan", "when": "Right after you submit", "title": "Get fingerprinted (Live Scan)", "body": "After you submit, the Board emails you a Live Scan form. Take it to a California Live Scan site and pay that site's fee there. Live Scan is faster than mailed fingerprint cards. Use only the Board's form; results done for another agency don't count.", "cost": "Set by the Live Scan site (not verified)", "link": "https://oag.ca.gov/fingerprints/locations", "linkLabel": "Find a Live Scan site"}, {"id": "lic-pearson", "when": "Around the same time", "title": "Register for the NCLEX with Pearson VUE", "body": "Register online and pay the exam fee. You need Simpson's program code. If you don't see a confirmation within two days, contact Pearson VUE.", "cost": "$200 (rises to $350 for registrations on or after Feb 1, 2027)", "link": "https://www.ncsbn.org/nclex-application-and-registration.htm", "linkLabel": "NCSBN: register for NCLEX"}, {"id": "lic-status", "when": "After you apply", "title": "Watch your application status", "body": "Check BreEZe or the Board's status page for deficiencies and fix them fast. Once the Board makes you eligible and Pearson VUE has your registration, you get an Authorization to Test (ATT) email.", "cost": "", "link": "https://www.rn.ca.gov/online/appstatus.shtml", "linkLabel": "Board: application status"}, {"id": "lic-schedule", "when": "When your ATT arrives", "title": "Schedule your NCLEX", "body": "Schedule through Pearson VUE within the dates on your ATT. Read the cancel and reschedule rules before you pick a date.", "cost": "", "link": "https://www.ncsbn.org/nclex-application-and-registration.htm", "linkLabel": "NCSBN: scheduling"}, {"id": "lic-interim", "when": "Optional, before your exam", "title": "Decide whether you need an interim permit", "body": "An interim permit can let a graduate work under supervision while waiting for results. Ask your future employer whether they want you to have one before you pay.", "cost": "$100 per the Board's fee schedule", "link": "https://rn.ca.gov/consumers/fees.shtml", "linkLabel": "Board: fee schedule"}, {"id": "lic-verify", "when": "After you pass", "title": "Verify your license and tell your employer", "body": "Look yourself up on the state's license search. Then add your RN license to My Story so your résumé and job matches update.", "cost": "", "link": "https://search.dca.ca.gov/", "linkLabel": "Verify a license"}], "note": "WillHelp doesn't collect background, disclosure, or fingerprint information. Questions about what to disclose go to the Board, not here."}, "compliance": {"presets": ["TB screening", "Flu vaccine", "Other required vaccines or titers", "Background check", "Drug screen", "Physical exam", "Health insurance proof", "Site orientation or modules", "Student ID badge", "Liability insurance", "Other"], "note": "Your school and each clinical site set what's required. This tracker only keeps dates so you get a reminder."}};
+const INSTRUCTOR = false;
+
+
+const CRED_KEYS = [
+  {key:"bls", label:"BLS (American Heart Association healthcare provider)"},
+  {key:"acls", label:"ACLS"},
+  {key:"pals", label:"PALS"},
+  {key:"cna", label:"CNA (California)"},
+  {key:"cpt1", label:"Phlebotomy CPT1 (California)"},
+  {key:"emt", label:"EMT"},
+  {key:"cpr", label:"General CPR (not BLS)"},
+  {key:"other", label:"Other"}
+];
+const STATUSES = [["planned","Planned"],["in_progress","In progress"],["completed","Completed"],["needs_update","Needs updating"]];
+const APP_STATUSES = ["Saved","Preparing","Applied","Interview","Offer","Closed"];
+const CNA_STEPS = ["Exploring","Checking documentation","Preparing application","Submitted","Awaiting response","Exam authorized","Exam scheduled","Exam completed","Certification issued and verified"];
+const EXP_TYPES = [["employment","Employment"],["military","Military service"],["volunteer","Volunteer or community"],["leadership","Leadership"],["caregiving","Caregiving"]];
+const RESUME_TARGETS = ["Student employment","CNA or nursing assistant","Patient sitter","Unit clerk","Patient care technician","Medical assisting","Externship","Scholarship","New graduate RN"];
+
+/* ------------------------- storage ------------------------- */
+const KEY = "willhelp.student.v1";
+function blankState(){
+  return {v:2, demo:false, onboarded:false, textScale:1,
+    profile:{
+      about:{preferredName:"",legalName:"",useLegal:false,pronouns:"",email:"",phone:"",city:"Redding, CA",showEmail:true,showPhone:true,showCity:true},
+      education:{school:"Simpson University",program:"Bachelor of Science in Nursing (BSN)",enrolledConfirmed:true,fullTime:true,honorsOther:"",cohort:"",catalogYear:"",expectedGrad:"",prevEducation:"",gpa:"",showGpa:false,honors:"",path:{transfer:false,repeat:false,leave:false,partTime:false},courses:{}},
+      experience:[], credentials:[], skills:[], languages:[],
+      goals:{interests:"",interestsOther:"",jobTypes:"",jobTypesOther:"",availability:"",availabilityNote:"",locationsOther:"",shifts:"",commute:"",locations:"",start:"",budget:"",needNow:""},
+      accomplishments:[]
+    },
+    lastExport:"", docs:[], apps:[], cna:{step:0,checks:{},letter:""}, precep:{interests:"",alternates:"",status:"Preferences only",checks:{},questions:""}, rec:[], dismissed:[], license:{done:{}}, compliance:[]
+  };
+}
+function sharedMode(){try{return sessionStorage.getItem("willhelp.shared")==="1"}catch(_){return false}}
+function storeFor(k){try{return (k===KEY&&sharedMode())?sessionStorage:localStorage}catch(_){return null}}
+function loadJSON(k){try{const s=storeFor(k).getItem(k);return s?JSON.parse(s):null}catch(e){return null}}
+function saveJSON(k,v){try{storeFor(k).setItem(k,JSON.stringify(v));return true}catch(e){toast("Couldn't save on this device. Your browser may be blocking storage.");return false}}
+function deepMerge(base,over){
+  if(Array.isArray(base)) return over!==undefined?over:base;
+  if(base&&typeof base==="object"){const o={...base};for(const k in over){o[k]=(k in base)?deepMerge(base[k],over[k]):over[k]}return o}
+  return over!==undefined?over:base;
+}
+let state = deepMerge(blankState(), loadJSON(KEY)||{});
+if(state.demo){state=blankState()} /* retire old sample-student data from v0.1/v0.2 */
+if((state.v||1)<2){const E=state.profile.education;if(!E.school)E.school="Simpson University";if(!E.program||E.program==="BSN (pre-licensure)")E.program="Bachelor of Science in Nursing (BSN)";E.enrolledConfirmed=true;E.fullTime=true;if(!state.profile.about.city)state.profile.about.city="Redding, CA";state.v=2}
+let DATA = deepMerge(SEED, {});
+let touring=false;
+function save(){if(touring)return;saveJSON(KEY,state)}
+
+/* ------------------------- helpers ------------------------- */
+const $=s=>document.querySelector(s);
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function getP(o,p){return p.split(".").reduce((a,k)=>a==null?undefined:a[k],o)}
+function setP(o,p,v){const ks=p.split(".");let a=o;ks.slice(0,-1).forEach(k=>{if(a[k]==null)a[k]={};a=a[k]});a[ks[ks.length-1]]=v}
+function uid(){return Math.random().toString(36).slice(2,9)}
+function fmtDate(d){if(!d)return"";const x=new Date(d+(d.length===10?"T12:00:00":""));return isNaN(x)?d:x.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"})}
+function daysSince(d){const x=new Date(d+"T12:00:00");return Math.floor((TODAY-x)/864e5)}
+function daysUntil(d){const x=new Date(d+"T12:00:00");return Math.ceil((x-TODAY)/864e5)}
+function isStale(d){return !d||daysSince(d)>DATA.reviewDays}
+function toast(msg){document.querySelectorAll(".toast").forEach(x=>x.remove());const t=document.createElement("div");t.className="toast";t.setAttribute("role","status");t.textContent=msg;document.body.appendChild(t);$("#live").textContent=msg;setTimeout(()=>t.remove(),3200)}
+function currentStage(){const cur=DATA.curriculum;const C=state.profile.education.courses;if(!anyCourseData())return -1;
+  const ip=cur.terms.findIndex(t=>cur.courses.some(c=>c.term===t.id&&(C[c.code]||{}).status==="in_progress"));if(ip>=0)return ip;
+  if(cur.courses.every(c=>(C[c.code]||{}).status==="completed"))return cur.terms.length;return -1}
+function courseStatus(code){return state.profile.education.courses[code]?.status||""}
+function done(code){return courseStatus(code)==="completed"}
+function active(code){const s=courseStatus(code);return s==="in_progress"||s==="completed"}
+function anyCourseData(){return Object.values(state.profile.education.courses).some(c=>c.status)}
+function hasData(){const P=state.profile;return !!(P.about.preferredName||P.about.legalName||P.experience.length||P.credentials.length||P.accomplishments.length||state.docs.length)}
+function name(){return state.profile.about.preferredName.trim()}
+function heldKeys(){
+  const s=new Set();
+  state.profile.credentials.filter(c=>c.kind==="held").forEach(c=>{if(c.key&&(!c.expires||daysUntil(c.expires)>=0))s.add(c.key)});
+  const E=state.profile.education;if(E.enrolledConfirmed){s.add("enrolled");if(E.fullTime)s.add("su")}
+  return s;
+}
+async function download(filename,text,mime){
+  if(EMBED&&window.claude&&window.claude.use){try{const d=await window.claude.use("downloads");if(d){await d.save({filename,data:text});return}}catch(_){toast("The download was declined or isn't available here. Use Copy instead.");return}}
+  downloadDirect(filename,text,mime)}
+function downloadDirect(filename,text,mime){const b=new Blob([text],{type:mime||"text/plain"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=filename;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+async function copyText(t){try{await navigator.clipboard.writeText(t);toast("Copied.")}catch(e){const ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");toast("Copied.")}catch(_){toast("Copy isn't available here. Select the text and copy it.")}ta.remove()}}
+
+/* Two-tap confirm: works where window.confirm is blocked (embedded viewers). */
+let armed=null,armedT;
+function confirmTap(key,msg){if(armed===key){armed=null;return true}armed=key;clearTimeout(armedT);armedT=setTimeout(()=>armed=null,6000);toast(msg+" Tap again to confirm.");return false}
+const EMBED=(()=>{try{return window.self!==window.top}catch(_){return true}})();
+
+/* ------------------------- field builders ------------------------- */
+function field(prompt,label,path,opt={}){
+  const v=getP(state,path)??"";const id="f_"+path.replace(/\W/g,"_");
+  let input;
+  const fx=opt.fix||(opt.type==="textarea"?"sentences":"first");
+  const fixAttr=(["email","tel","date","number","select","password"].includes(opt.type)||fx==="none")?"":`data-fix="${fx}" spellcheck="true" autocapitalize="${fx==="words"?"words":"sentences"}"`;
+  if(opt.type==="textarea") input=`<textarea id="${id}" data-bind="${path}" ${fixAttr} placeholder="${esc(opt.ph||"")}">${esc(v)}</textarea>`;
+  else if(opt.type==="select") input=`<select id="${id}" data-bind="${path}"><option value="">Choose</option>${opt.options.map(o=>{const [val,lab]=Array.isArray(o)?o:[o,o];return `<option value="${esc(val)}" ${val===v?"selected":""}>${esc(lab)}</option>`}).join("")}</select>`;
+  else input=`<input id="${id}" type="${opt.type||"text"}" data-bind="${path}" ${fixAttr} value="${esc(v)}" placeholder="${esc(opt.ph||"")}" ${opt.auto?`autocomplete="${opt.auto}"`:""}>`;
+  return `<label class="f" for="${id}">${prompt?`<span class="prompt">${esc(prompt)}</span>`:""}<span class="flabel">${esc(label)}${opt.optional===false?"":" (optional)"}</span>${input}</label>`;
+}
+function checkbox(label,path){const v=!!getP(state,path);return `<label class="check"><input type="checkbox" data-bind="${path}" ${v?"checked":""}><span>${esc(label)}</span></label>`}
+
+/* ------------------------- milestone engine ------------------------- */
+function ruleMatches(r){
+  const w=r.when||{};
+  if(w.completed&&!w.completed.every(done))return false;
+  if(w.notStarted&&!w.notStarted.every(c=>!active(c)))return false;
+  if(w.anyActive&&!w.anyActive.some(active))return false;
+  if(w.untilAllCompleted&&w.untilAllCompleted.every(done))return false;
+  if(w.unlessHeld&&heldKeys().has(w.unlessHeld))return false;
+  return true;
+}
+function nextSteps(){
+  const steps=[];
+  if(anyCourseData()) DATA.rules.filter(ruleMatches).forEach(r=>steps.push({...r}));
+  // credential reminders
+  state.profile.credentials.forEach(c=>{if(c.expires){const d=daysUntil(c.expires);if(d<=60)steps.push({id:"exp-"+c.id,priority:d<0?1:3,title:d<0?`${c.name||"A credential"} has expired`:`${c.name||"A credential"} expires in ${d} day${d===1?"":"s"}`,body:"Tell me whether you need a renewal class, or check whether your school or employer covers it.",link:"#opps-bls",linkLabel:"See BLS and ACLS classes"})}});
+  // clinical paperwork reminders (dates only)
+  (state.compliance||[]).forEach(c=>{if(c.due){const d=daysUntil(c.due);if(d<=45)steps.push({id:"cmp-"+c.id+"-"+c.due,priority:d<0?1:3,title:d<0?`${c.label||"Clinical paperwork"} is past due`:`${c.label||"Clinical paperwork"} due in ${d} day${d===1?"":"s"}`,body:"Expired clinical paperwork can keep you out of clinical. Check what your school or site needs to renew it.",link:"#journey-paperwork",linkLabel:"Open clinical paperwork"})}});
+  // RN license roadmap near graduation
+  {const g=state.profile.education.expectedGrad;if(g){const d=daysUntil(g);const L=DATA.license;if(L&&d<=150&&d>=-365&&!steps.some(x=>x.id==="grad")){const left=L.steps.filter(x=>!state.license.done[x.id]).length;if(left)steps.push({id:"lic-road",priority:d<=60?2:4,title:`RN license: ${left} step${left===1?"":"s"} left`,body:d>=0?`You graduate in about ${Math.max(1,Math.round(d/7))} week${Math.round(d/7)===1?"":"s"}. Start the Board application and NCLEX steps now so you can test soon after graduation.`:"Finish your Board application and NCLEX steps so you can start work as an RN.",link:"#journey-license",linkLabel:"Open my RN license steps"})}}}
+  // upcoming application deadlines
+  state.apps.forEach(a=>{if(a.deadline&&a.status!=="Closed"&&a.status!=="Applied"){const d=daysUntil(a.deadline);if(d>=0&&d<=21)steps.push({id:"app-"+a.id,priority:2,title:`${a.title} deadline in ${d} day${d===1?"":"s"}`,body:`Status: ${a.status}.`,link:"#apps",linkLabel:"Open tracker"})}});
+  if(!steps.length){
+    steps.push({id:"where",priority:50,title:"Tell me where you are in school",body:"Tell me where you are in school, and I'll help you see what you can do now and what to prepare for next.",link:"#journey",linkLabel:"Set my place in school"});
+    steps.push({id:"resume0",priority:51,title:"Start a résumé with what you have",body:"Even a name and one job is enough to get started. We can add more later.",link:"#create-resume",linkLabel:"Build my résumé"});
+  }
+  return steps.filter(s=>!state.dismissed.includes(s.id)).sort((a,b)=>a.priority-b.priority);
+}
+function stepCard(s){
+  return `<div class="card step"><h3>${esc(s.title)}</h3><p>${esc(s.body)}</p>${s.tag?`<p class="tag">${esc(s.tag)}</p>`:""}
+  <div class="row"><a class="btn small" href="${s.link}">${esc(s.linkLabel)}</a><button class="btn ghost small" data-act="dismiss" data-id="${esc(s.id)}">Hide this</button></div></div>`;
+}
+
+/* ------------------------- views ------------------------- */
+const views = {};
+
+views.home = () => {
+  const n=name(); const steps=nextSteps();
+  const welcome = !state.onboarded ? `<div class="card tint"><h2 style="margin-top:0">Tell me a little about yourself, or jump right in.</h2>
+    <p>You can add more whenever you're ready. Nothing you enter leaves this device.</p>
+    ${field("Tell me what name you go by.","Preferred name","profile.about.preferredName",{auto:"given-name"})}
+    <div class="row"><a class="btn" href="#journey" data-act="onboarded">Tell me where I am in school</a><button class="btn sec" data-act="onboarded">Jump right in</button></div>
+    ${tourCTA()}
+    <p class="note" style="margin-bottom:0">Using a shared or lab computer? <button class="btn ghost small" data-act="sharedon">Clear my information when I close the browser</button></p></div>` : "";
+  const appsOpen=state.apps.filter(a=>a.status!=="Closed");
+  const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+  const standalone=window.navigator.standalone===true||(window.matchMedia&&matchMedia("(display-mode: standalone)").matches);
+  const a2hs=(isIOS&&!standalone&&!EMBED&&!state.dismissed.includes("a2hs"))?`<div class="card tint"><h3>On iPhone, add WillHelp to your Home Screen</h3><p>Safari can clear information saved by websites you haven't opened in 7 days. Opening WillHelp from your Home Screen keeps your information safer. Tap Share, then Add to Home Screen.</p><button class="btn ghost small" data-act="dismiss" data-id="a2hs">Got it</button></div>`:"";
+  return `<h1>${n?`Hi ${esc(n)}. `:""}Tell me what you need today.</h1>
+  <p class="lead">Automated guidance inspired by Will Gendron. It is not a conversation with Will, and Will has not reviewed your information.</p>
+  ${state.onboarded?tourCTA():""}
+  ${welcome}${a2hs}
+  <div class="actions">
+    <a class="bigbtn" href="#create-resume">Build my résumé<span>Start from what you've shared</span></a>
+    <a class="bigbtn" href="#opps-jobs">Find a job<span>Local, with real requirements</span></a>
+    <a class="bigbtn" href="#opps-funding">Help pay for school<span>Scholarships and aid</span></a>
+    <a class="bigbtn" href="#create-rec">Request a recommendation<span>A clear packet for your recommender</span></a>
+    <a class="bigbtn" href="#opps-bls">Find a class or certification<span>BLS, ACLS, CNA path</span></a>
+    <a class="bigbtn" href="#support">Get support<span>No questions asked</span></a>
+    <a class="bigbtn" href="#journey">See my next steps<span>My Nursing Journey</span></a>
+  </div>
+  <h2>Next steps</h2>
+  ${steps.slice(0,3).map(stepCard).join("")}
+  ${steps.length>3?`<a class="btn sec" href="#journey">See all ${steps.length} next steps</a>`:""}
+  <h2>My applications</h2>
+  <div class="card">${appsOpen.length?appsOpen.slice(0,4).map(a=>`<div class="list-item"><b>${esc(a.title)}</b> <span class="badge b-info">${esc(a.status)}</span>${a.deadline?` <span class="note">Due ${fmtDate(a.deadline)}</span>`:""}</div>`).join(""):`<p class="note" style="margin:0">Nothing saved yet. Save an opportunity and it shows up here.</p>`}
+  <div class="row" style="margin-top:.5rem"><a class="btn sec small" href="#apps">Open tracker</a></div></div>
+  <p class="note">Reminders appear inside WillHelp only. Notifications are not set up in this prototype.</p>`;
+};
+
+const JOURNEY_TABS=[["","My path"],["paperwork","Clinical paperwork"],["license","RN license"]];
+function journeyTabs(sub){return `<div class="tabs" role="navigation" aria-label="Journey sections">${JOURNEY_TABS.map(([k,l])=>`<a href="#journey${k?"-"+k:""}" aria-current="${k===(sub||"")}">${l}</a>`).join("")}</div>`}
+function viewPaperwork(){
+  const C=DATA.compliance, list=state.compliance;
+  const bls=state.profile.credentials.filter(c=>c.key==="bls");
+  const row=(c,i)=>{const d=c.due?daysUntil(c.due):null;const badge=d===null?`<span class="badge b-info">No due date</span>`:d<0?`<span class="badge b-warn">Past due</span>`:d<=45?`<span class="badge b-warn">Due in ${d} day${d===1?"":"s"}</span>`:`<span class="badge b-ok">Current</span>`;
+   return `<div class="card"><div class="row" style="justify-content:space-between"><b>${esc(c.label||"Item")}</b>${badge}</div>
+   ${c.preset==="Other"||!C.presets.includes(c.label)?`<label class="f"><span class="flabel">What is it?</span><input type="text" data-bind="compliance.${i}.label" data-fix="first" value="${esc(c.label||"")}" placeholder="Example: N95 fit test"></label>`:""}
+   <div class="row"><label class="f" style="flex:1"><span class="flabel">Date done</span><input type="date" data-bind="compliance.${i}.done" value="${esc(c.done||"")}"></label>
+   <label class="f" style="flex:1"><span class="flabel">Expires or due</span><input type="date" data-bind="compliance.${i}.due" data-rerender="1" value="${esc(c.due||"")}"></label></div>
+   <button class="btn ghost small" data-act="cmpdel" data-i="${i}">Remove</button></div>`};
+  const unused=C.presets.filter(p=>p==="Other"||!list.some(c=>c.label===p));
+  return `<h2 style="margin-top:.5rem">Clinical paperwork</h2>
+  <p class="lead">Keep the dates for what your school and clinical sites require, and I'll remind you before anything runs out.</p>
+  <div class="warnbox">Dates only. Don't enter test results, vaccine details, or background information.</div>
+  ${bls.length?bls.map(b=>{const d=b.expires?daysUntil(b.expires):null;return `<div class="card"><div class="row" style="justify-content:space-between"><b>${esc(b.name||"BLS")}</b>${d===null?`<span class="badge b-info">No expiration set</span>`:d<0?`<span class="badge b-warn">Expired</span>`:d<=60?`<span class="badge b-warn">Expires in ${d} days</span>`:`<span class="badge b-ok">Current</span>`}</div><p class="note" style="margin:.3rem 0">From My Story${b.expires?`, expires ${fmtDate(b.expires)}`:""}. Change it in My Story and it updates here, on your résumé, and in job matches.</p><a class="btn sec small" href="#story-skills">Edit in My Story</a></div>`}).join(""):`<div class="card"><b>BLS card</b><p class="note" style="margin:.3rem 0">Add your BLS card in My Story once. It shows here, on your résumé, and in job matches.</p><a class="btn sec small" href="#story-skills">Add BLS in My Story</a></div>`}
+  ${list.map(row).join("")}
+  <div class="card"><b>Add an item</b><p class="note" style="margin:.2rem 0 .5rem">Tap what your school or site asks for.</p><div class="pill-row">${unused.map(p=>`<button class="pill" data-act="cmpadd" data-label="${esc(p)}">+ ${esc(p)}</button>`).join("")}</div></div>
+  <p class="note">${esc(C.note)}</p>`;
+}
+function viewLicense(){
+  const L=DATA.license, done=state.license.done;
+  const g=state.profile.education.expectedGrad, gd=g?daysUntil(g):null;
+  const n=L.steps.filter(x=>done[x.id]).length;
+  const fee=L.feeChange&&daysUntil(L.feeChange.date)>0?`<div class="ctx"><b>Fee change:</b> ${esc(L.feeChange.text)} <a href="${esc(L.feeChange.source)}" target="_blank" rel="noopener">Pearson VUE</a></div>`:"";
+  return `<h2 style="margin-top:.5rem">RN license and NCLEX</h2>
+  <p class="lead">The steps between graduation and your first RN shift, in order. Check each one off as you finish it.</p>
+  ${g?`<p class="note">Expected graduation: ${fmtDate(g)}${gd!==null&&gd>=0?`, about ${Math.max(1,Math.round(gd/7))} weeks away`:""}. <a href="#journey">Change</a></p>`:`<div class="card tint"><p style="margin:0">Add your expected graduation date under <a href="#journey">My path</a> and I'll remind you when it's time to start.</p></div>`}
+  ${fee}
+  <div class="card"><b>${n} of ${L.steps.length} done</b><div class="meter" aria-hidden="true"><span style="width:${Math.round(100*n/L.steps.length)}%"></span></div></div>
+  ${L.steps.map((x,i)=>`<div class="card step"><label class="check" style="margin:0"><input type="checkbox" data-act-change="licdone" data-id="${x.id}" ${done[x.id]?"checked":""}><span><b>${i+1}. ${esc(x.title)}</b>${done[x.id]?` <span class="badge b-ok">Done ${fmtDate(done[x.id])}</span>`:""}</span></label>
+   <p class="note" style="margin:.3rem 0"><b>When:</b> ${esc(x.when)}</p>
+   <p style="margin:.3rem 0">${esc(x.body)}</p>
+   ${x.cost?`<p class="note" style="margin:.3rem 0"><b>Cost:</b> ${esc(x.cost)}</p>`:""}
+   ${x.link?`<a class="btn small sec" href="${esc(x.link)}" target="_blank" rel="noopener">${esc(x.linkLabel)}</a>`:""}</div>`).join("")}
+  <div class="warnbox">${esc(L.note)} Fees and steps can change. The Board's site is the final word. Checked ${fmtDate(L.checked)}.</div>`;
+}
+views.journey = (sub) => {
+  if(sub==="paperwork") return `<h1>My Nursing Journey</h1>${journeyTabs(sub)}${viewPaperwork()}`;
+  if(sub==="license") return `<h1>My Nursing Journey</h1>${journeyTabs(sub)}${viewLicense()}`;
+  const cur=DATA.curriculum; const c=state.profile.education.courses;
+  const steps=nextSteps();
+  const cs=currentStage();
+  const stageBtns=cur.terms.map((t,i)=>`<button class="btn sec${cs===i?" picked":""}" aria-pressed="${cs===i}" data-act="stage" data-i="${i}">${cs===i?"✓ ":""}${esc(t.short)}<span class="note" style="margin-left:.4rem">${esc(t.label)}</span></button>`).join("")+`<button class="btn sec${cs===cur.terms.length?" picked":""}" aria-pressed="${cs===cur.terms.length}" data-act="stage" data-i="${cur.terms.length}">${cs===cur.terms.length?"✓ ":""}Graduated</button>`;
+  const path=state.profile.education.path;
+  return `<h1>My Nursing Journey</h1>${journeyTabs("")}
+  <p class="lead">Tell me where you are in school, and I'll help you see what you can do now and what to prepare for next.</p>
+  <div class="card">${checkbox("I'm currently enrolled in Simpson's BSN program","profile.education.enrolledConfirmed")}${checkbox("I'm a full-time student","profile.education.fullTime")}<p class="note" style="margin:0">Opportunity matches only count enrollment when you check these.</p></div>
+  <div class="card"><h2 style="margin-top:0">Where are you right now?</h2>
+  <p class="note">Pick the closest one. I'll propose a schedule from Simpson's published plan and you confirm or change it below.</p>
+  <div class="stage-list">${stageBtns}</div>
+  ${cs>=0?`<p class="note" style="margin:.5rem 0 0"><b>You're set as: ${esc(cs<cur.terms.length?cur.terms[cs].short:"Graduated")}.</b> Fix any single course in My courses below.</p>`:""}
+  ${field("Used for RN license reminders.","Expected graduation date","profile.education.expectedGrad",{type:"date"})}</div>
+  <div class="ctx">Course map source: ${esc(cur.source)}, checked ${fmtDate(cur.checked)}. ${esc(cur.status)} Your statuses are student-reported, not a transcript or degree audit.</div>
+  <h2>All next steps</h2>
+  ${steps.map(stepCard).join("")}
+  ${state.dismissed.length?`<button class="btn ghost small" data-act="undismiss">Show hidden steps (${state.dismissed.length})</button>`:""}
+  <h2>My courses</h2>
+  <div class="card">
+  <p class="note">Transfers, repeated courses, leaves, and part-time paths are fine. Set each course to what's true for you.</p>
+  <div class="pill-row" role="group" aria-label="My path">
+   ${[["transfer","I transferred in"],["repeat","I'm repeating a course"],["leave","I took a leave"],["partTime","I'm part-time"]].map(([k,l])=>`<button class="pill" data-act="pathflag" data-k="${k}" aria-pressed="${!!path[k]}">${l}</button>`).join("")}
+  </div>
+  ${cur.terms.map(t=>`<h3 style="margin-top:1rem">${esc(t.short)} <span class="note">${esc(t.label)}</span></h3>`+cur.courses.filter(x=>x.term===t.id).map(x=>{
+     const st=c[x.code]?.status||"";
+     return `<div class="course"><div><b>${esc(x.nick)}</b> <span class="note">${x.code==="PREREQ"?"":esc(x.code)+" "}${esc(x.name)}</span></div>
+     <label class="sr-only" for="cs_${x.code}" style="position:absolute;left:-9999px">Status for ${esc(x.nick)}</label>
+     <select id="cs_${x.code}" data-course="${esc(x.code)}"><option value="">Not set</option>${STATUSES.map(([v,l])=>`<option value="${v}" ${v===st?"selected":""}>${l}</option>`).join("")}</select></div>`}).join("")).join("")}
+  </div>
+  <p class="note">${esc(cur.adminNotes)}</p>`;
+};
+
+/* ---------- keeping drafts in step with the story ---------- */
+function fp(o){const t=JSON.stringify(o||"");let h=5381;for(let i=0;i<t.length;i++)h=((h<<5)+h+t.charCodeAt(i))|0;return String(h)}
+const FP={
+  resume:()=>fp(state.profile),
+  cna:()=>fp([state.profile.about,state.profile.education]),
+  rec:()=>fp([state.profile.about,state.profile.accomplishments,state.profile.experience]),
+  precep:()=>fp([state.profile.goals,state.profile.education,state.precep.alternates])
+};
+function staleNote(msg,act){return `<div class="stale-note" role="status"><span>${esc(msg)}</span><button type="button" class="btn small" data-act="${act}">Update it</button></div>`}
+
+/* ---------- using Goals answers in Opportunities ---------- */
+const BUDGET_LIMIT={"Free options only":0,"Up to $50":50,"Up to $150":150,"Up to $300":300,"More if it clearly helps":Infinity};
+function goalsList(k){const g=state.profile.goals;return (g[k]||"").split(", ").filter(Boolean)}
+function goalMatches(r){
+  const out=[]; const g=state.profile.goals;
+  if(r.jobType&&goalsList("jobTypes").includes(r.jobType))out.push(`Matches a job type you picked: ${r.jobType}`);
+  const locs=goalsList("locations"); if(r.location&&locs.some(l=>r.location.toLowerCase().includes(l.toLowerCase())))out.push("In a location you picked");
+  return out;
+}
+function goalWarnings(r){
+  const out=[]; const g=state.profile.goals;
+  if(g.commute==="Online only"&&r.location&&!/online|statewide/i.test(r.location)&&r.cat!=="funding")out.push("You picked online only, and this one is in person.");
+  if(r.cat==="job"&&(g.availability||g.shifts))out.push(`Your availability: ${[g.availability,g.shifts].filter(Boolean).join("; ")}${g.availabilityNote?" ("+g.availabilityNote+")":""}. Check this against the schedule.`);
+  return out;
+}
+function overBudget(r){
+  const lim=BUDGET_LIMIT[state.profile.goals.budget]; if(lim===undefined||r.cat!=="training")return false;
+  if(lim===0)return !["Free","Included with Simpson enrollment"].includes(r.cost);
+  const known=(r.costItems||[]).filter(i=>i.amount&&i.confirmed).reduce((a,i)=>a+i.amount,0);
+  return known>lim;
+}
+
+/* ---------- help lists used outside My Story ---------- */
+const CLIN_SITES=["Mercy Medical Center Redding","Shasta Regional Medical Center","Shasta Community Health Center","St. Elizabeth Community Hospital (Red Bluff)","Mayers Memorial Hospital (Fall River Mills)","Shasta County Public Health","A skilled nursing or long-term care facility","A local school","A community clinic"];
+const CLIN_UNITS=["Medical-surgical","Telemetry","ICU","Emergency department","Respiratory therapy","Labor and delivery","Mother-baby","Pediatrics","NICU","Behavioral health","Long-term care","Outpatient clinic","Community or public health","Surgery or PACU","Oncology"];
+const REC_INSTR=["Please email the letter directly to the program","Please upload it through the online application portal (I'll send the link)","Please email the letter to me as a PDF","Please complete an online reference form (I'll send the link)","Please give me a signed letter in a sealed envelope"];
+const PRECEP_Q=["What does a typical shift schedule look like?","Will I follow my preceptor's schedule, including nights or weekends?","What should I review before my first shift?","How will we set and check my learning goals?","How do I get my badge and system access set up?","Who do I contact if I'm sick or running late?","Which skills will I be able to practice on this unit?","How will I get feedback, and how often?"];
+const APP_NOTES=["Sent my application","Asked for a reference","Follow up by email in one week","Interview scheduled","Send a thank-you note after the interview","Waiting to hear back","Need to finish my résumé first","Need to renew BLS first"];
+function stageLabel(){const t=DATA.curriculum.terms.slice().reverse().find(t=>DATA.curriculum.courses.some(c=>c.term===t.id&&courseStatus(c.code)==="in_progress"));return t&&t.id!=="pre"?(/^Adult/.test(t.short)?t.short:t.short.charAt(0).toLowerCase()+t.short.slice(1)):""}
+function summarySuggestions(d){
+  const P=state.profile,E=P.education; const school=E.school||"Simpson University"; const st=stageLabel(); const tgt=d.target.toLowerCase();
+  const avail=P.goals.availability&&!/not working/i.test(P.goals.availability)?P.goals.availability.toLowerCase():"";
+  const exps=P.experience.map(e=>e.title).filter(Boolean).slice(0,2).map(x=>x.toLowerCase());
+  const langs=P.languages.map(l=>l.name).filter(n=>n&&n!=="English");
+  const ints=(P.goals.interests||"").split(", ").filter(x=>x&&x!=="Not sure yet").slice(0,2).map(x=>x.toLowerCase());
+  const out=[];
+  if(/new graduate/i.test(d.target)) out.push(`Graduating ${E.program||"BSN"} student at ${school} seeking a new graduate RN residency${ints.length?` in ${ints.join(" or ")}`:""}.`);
+  else out.push(`Nursing student at ${school}${st?`, currently in my ${st}`:""}, looking for a ${tgt} role${avail?` (${avail})`:""}.`);
+  if(exps.length) out.push(`Nursing student with experience as a ${exps.join(" and ")}, ready to bring that work ethic to a ${tgt} role.`);
+  out.push(`Dependable, team-focused nursing student${langs.length?` who speaks ${langs.join(" and ")}`:""}${ints.length?`, with a strong interest in ${ints.join(" and ")}`:""}.`);
+  return out;
+}
+function accStarters(type){
+  const t=type||""; const out=[];
+  if(/Clinical/.test(t)) DATA.curriculum.courses.filter(c=>c.clinicalPossible&&active(c.code)).forEach(c=>out.push(`During my ${c.nick} clinical, I noticed `));
+  const m={"Simulation moment":"During a simulation in the Simpson sim lab, I ","Safety catch":"I noticed a possible safety issue when ","Leadership":"I led ","Teamwork":"Our team needed to ","Service or volunteering":"I volunteered with ","Mission trip":"On a mission trip to ","Growth or overcoming a challenge":"Something that was hard for me was ","Patient education":"I taught a patient about ","Award":"I received this award for ","Scholarship":"I was awarded this scholarship for ","Dean's List or academic honor":"I earned this by ","Project":"I worked on a project about ","Research or poster":"My research or poster looked at ","Presentation":"I presented on ","Peer tutoring or mentoring":"I helped a classmate understand ","Club or student government":"As a member, I ","Athletics":"As an athlete, I learned ","Military achievement":"While serving, I ","Language skill used":"I used my language skills to help ","Interview story":"A time I'm proud of is when "};
+  if(m[t])out.push(m[t]);
+  return out.concat(["The situation was ","My part was ","The result was ","What I learned was "]);
+}
+function relOptions(){
+  const o=[];
+  DATA.curriculum.courses.filter(c=>c.clinicalPossible&&active(c.code)).forEach(c=>o.push(`my clinical instructor in ${c.nick}`));
+  o.push("my simulation lab instructor","my academic advisor");
+  state.profile.experience.forEach(e=>{if(e.org||e.title)o.push(`my supervisor at ${e.org||e.title}`)});
+  o.push("my volunteer coordinator","my pastor or ministry leader","my coach","my professor in a prerequisite course");
+  return [...new Set(o)];
+}
+function oppOptions(){
+  return [...new Set(state.apps.map(a=>a.title).filter(Boolean).concat(["the HCAI Bachelor of Science Nursing Scholarship","a Simpson University scholarship","a student nurse externship","a hospital nursing assistant job","my preceptorship placement","a new graduate RN residency","a graduate nursing program"]))];
+}
+
+/* ---------- My Story ---------- */
+/* ------------------------- My Story options (Simpson students and new grads) ------------------------- */
+const OPT = {
+  pronouns:["she/her","he/him","they/them","Prefer not to say"],
+  cities:["Redding, CA","Anderson, CA","Shasta Lake, CA","Palo Cedro, CA","Cottonwood, CA","Red Bluff, CA","Burney, CA","Weaverville, CA","Corning, CA","Chico, CA","Mount Shasta, CA"],
+  cohorts:["Fall 2023 cohort","Spring 2024 cohort","Fall 2024 cohort","Spring 2025 cohort","Fall 2025 cohort","Spring 2026 cohort","Fall 2026 cohort","Spring 2027 cohort"],
+  catalogYears:["2023-2024","2024-2025","2025-2026","2026-2027"],
+  programs:["Bachelor of Science in Nursing (BSN)","RN to BSN","Pre-nursing"],
+  honors:["Dean's List","President's List","Honors program","Scholarship recipient","Academic all-conference (athletics)"],
+  prevEd:["Shasta College","Butte College","College of the Siskiyous","Another community college","Another university","High school diploma","GED","CNA training program","EMT course","Medical assistant program","Military training"],
+  months:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+  roleTitles:{
+    employment:["CNA / nursing assistant","Caregiver / home care aide","Medical assistant","EMT","Patient sitter","Unit clerk","Phlebotomist","Receptionist / front desk","Barista","Server","Host","Cook / kitchen staff","Cashier","Retail associate","Customer service representative","Childcare / nanny","Tutor","Lifeguard","Camp counselor","Warehouse associate","Delivery driver","Office assistant","Farm or ranch work"],
+    military:["Hospital corpsman","Combat medic (68W)","Aerospace medical technician (4N0X1)","Other military medical","Infantry","Logistics / supply","Administration","Mechanic / maintenance","Communications","Military police"],
+    volunteer:["Hospital volunteer","Church or ministry volunteer","Mission trip team member","Food bank volunteer","Youth leader","Coach","Community health event volunteer","Animal shelter volunteer","Tutor or mentor","Disaster relief volunteer"],
+    leadership:["Club officer","Student government","Team captain","Peer mentor","Resident assistant (RA)","Small group leader","Shift lead","Event organizer","Class representative"],
+    caregiving:["Family caregiver","Caregiver for a grandparent","Caregiver for a parent","Caregiver for a sibling or child with special needs","Respite caregiver"]
+  },
+  issuers:["American Heart Association","American Red Cross","California Department of Public Health (CDPH)","National Healthcareer Association (NHA)","National Registry of EMTs (NREMT)","Health and Safety Institute (HSI)"],
+  skillSuggest:{
+    "Clinical (from school)":["Vital signs","Head-to-toe assessment","Medication administration","Sterile technique","Infection control and hand hygiene","Wound care basics","Blood glucose monitoring","Foley catheter care","IV pump basics","Safe patient transfers and mobility","Fall prevention","Patient education","ISBAR / SBAR handoff","Charting in an electronic health record (simulation)","Intake and output","Oxygen therapy basics"],
+    "Work and life":["Customer service","Teamwork","Clear communication","Time management","Staying calm under pressure","Training new coworkers","Problem solving","De-escalating upset people","Cash handling","Scheduling and organization","Microsoft Word and Excel","Google Docs and Sheets","Bilingual communication","Leading a small team"]
+  },
+  langs:["Spanish","Hmong","Punjabi","Mien","Lao","Tagalog","Vietnamese","Mandarin","Cantonese","Korean","Japanese","Hindi","Urdu","Arabic","Farsi (Persian)","Russian","Ukrainian","Armenian","Portuguese","French","German","Italian","Khmer","Thai","American Sign Language (ASL)","English"],
+  langLevels:["Native or first language","Fluent","Conversational","Basic","Medical phrases only","Learning"],
+  interests:["Medical-surgical","Telemetry / cardiac","ICU / critical care","Emergency","Labor and delivery","Mother-baby / postpartum","NICU","Pediatrics","Mental health / behavioral health","Operating room / perioperative","PACU / recovery","Oncology","Orthopedics / neuro","Home health","Hospice and palliative care","Long-term care / skilled nursing","Public or community health","School nursing","Rural or critical access nursing","Military nursing","Not sure yet"],
+  jobTypes:["CNA / nursing assistant","Patient sitter / safety observer","Unit clerk / health unit coordinator","Patient care technician","Student nurse extern","Medical assistant","Phlebotomist","EMT","Emergency department technician","Monitor / telemetry technician","Patient transporter","Medical scribe","Patient access / registration","Caregiver / home care aide","Campus job (tutor, lab assistant)","Summer healthcare internship","New grad RN residency","Per diem RN (after licensure)"],
+  hours:["Up to 8 hours a week","8 to 16 hours a week","16 to 24 hours a week","More than 24 hours a week","Weekends only","One 12-hour shift a week","Two 12-hour shifts a week","Summer and school breaks only","Per diem (when I'm available)","Not working during school"],
+  shifts:["Days","Evenings","Nights","Weekends","Flexible"],
+  accTypes:["Award","Scholarship","Dean's List or academic honor","Project","Research or poster","Presentation","Teamwork","Leadership","Service or volunteering","Mission trip","Growth or overcoming a challenge","Clinical moment (no patient details)","Simulation moment","Patient education","Safety catch","Peer tutoring or mentoring","Club or student government","Athletics","Military achievement","Language skill used","Interview story"]
+};
+const RESUME_ACC_TYPES=["Award","Scholarship","Dean's List or academic honor","Project","Research or poster","Presentation"];
+
+/* ---------- spelling and capitalization ---------- */
+const MISSPELL = {recieve:"receive",recieved:"received",seperate:"separate",definately:"definitely",occured:"occurred",managment:"management",responsibile:"responsible",enviroment:"environment",comunication:"communication",communcation:"communication",cusomer:"customer",custumer:"customer",oppurtunity:"opportunity",experiance:"experience",expierence:"experience",experince:"experience",patiant:"patient",pateint:"patient",patints:"patients",medicaiton:"medication",medicatoin:"medication",medecine:"medicine",schedual:"schedule",shedule:"schedule",availible:"available",avaliable:"available",excelent:"excellent",proffesional:"professional",profesional:"professional",assisstant:"assistant",asistant:"assistant",assitant:"assistant",nusring:"nursing",nurseing:"nursing",hospitol:"hospital",hosptial:"hospital",carefull:"careful",sucessful:"successful",succesful:"successful",teh:"the",adn:"and",alot:"a lot",acheive:"achieve",beleive:"believe",calender:"calendar",collegue:"colleague",concious:"conscious",embarass:"embarrass",goverment:"government",independant:"independent",knowlege:"knowledge",liason:"liaison",maintainance:"maintenance",neccessary:"necessary",necesary:"necessary",noticable:"noticeable",persistant:"persistent",prefered:"preferred",reccomend:"recommend",recomend:"recommend",recomendation:"recommendation",refered:"referred",relevent:"relevant",resturant:"restaurant",tommorow:"tomorrow",untill:"until",wierd:"weird",volunter:"volunteer",voluntere:"volunteer",volenteer:"volunteer",comunity:"community",communtiy:"community",leadershp:"leadership",phlebotemy:"phlebotomy",pharmocology:"pharmacology",cerification:"certification",certifcation:"certification",certificaton:"certification",licence:"license",febuary:"February",wendesday:"Wednesday",bussiness:"business",begining:"beginning",truely:"truly",wich:"which",thier:"their",accross:"across",adress:"address",basicly:"basically",commited:"committed",completly:"completely",efficent:"efficient",existance:"existence",familar:"familiar",finaly:"finally",freind:"friend",garantee:"guarantee",grammer:"grammar",happend:"happened",immediatly:"immediately",intrested:"interested",mispell:"misspell",occassion:"occasion",occurence:"occurrence",paitent:"patient",potentialy:"potentially",realy:"really",sargeant:"sergeant",speach:"speech",suprise:"surprise",symtoms:"symptoms",symptons:"symptoms",temprature:"temperature",tempature:"temperature",wether:"whether",asess:"assess",assesment:"assessment",assessmant:"assessment",documantation:"documentation",documentaion:"documentation",anatomey:"anatomy",physiolgy:"physiology",cleint:"client",clincal:"clinical",sterlie:"sterile",infecton:"infection",preceptership:"preceptorship",simpsons:"Simpson's"};
+function fixText(text,mode){
+  if(!text)return {text,changes:[]};
+  const changes=[]; let t=text.replace(/[ \t]+/g," ").replace(/ +\n/g,"\n").trim();
+  t=t.replace(/\b[A-Za-z]+\b/g,w=>{const lw=w.toLowerCase();const fix=MISSPELL[lw];if(!fix)return w;const out=(w[0]===w[0].toUpperCase())?fix[0].toUpperCase()+fix.slice(1):fix;if(out!==w)changes.push(`${w} to ${out}`);return out});
+  const before=t;
+  t=t.replace(/\bi\b(?=[\s,.'!?]|$)/g,"I").replace(/\bi'(m|ve|ll|d)\b/g,"I'$1");
+  if(mode==="words"&&t===t.toLowerCase()){const small=new Set(["of","and","the","at","for","in","on","to","a","an","or"]);t=t.split(" ").map((w,i)=>(i>0&&small.has(w))?w:w.charAt(0).toUpperCase()+w.slice(1)).join(" ").replace(/\bCa\b/,"CA")}
+  if(mode==="first")t=t.charAt(0).toUpperCase()+t.slice(1);
+  if(mode==="sentences")t=t.split("\n").map(l=>{l=l.replace(/^([-*•]\s*)/,"");return l.charAt(0).toUpperCase()+l.slice(1)}).join("\n").replace(/([.!?]\s+)([a-z])/g,(m,a,b)=>a+b.toUpperCase());
+  if(t!==before)changes.push("capitalization");
+  return {text:t,changes};
+}
+/* Suggested rewording of a line the student wrote. Shown as an offer; never applied without a tap. */
+function polishLine(line){
+  let l=fixText(line,"plain").text.trim().replace(/^[-*•]\s*/,"");
+  l=l.replace(/^i\s+was\s+responsible\s+for\s+/i,"").replace(/^responsible\s+for\s+/i,"").replace(/^i\s+(?=\w)/i,"").replace(/^my\s+job\s+was\s+to\s+/i,"").replace(/^i\s+had\s+to\s+/i,"");
+  l=l.replace(/\.$/,"");
+  return l.charAt(0).toUpperCase()+l.slice(1);
+}
+const BULLET_LIB=[
+  [/cna|nursing assistant|home care|aide/i,["Assisted residents with bathing, dressing, eating, and mobility","Measured and recorded vital signs and intake and output","Reported changes in condition to the nurse promptly","Helped prevent falls with safe transfers and frequent rounding","Kept residents' rooms clean, safe, and organized"]],
+  [/medical assistant/i,["Roomed patients and recorded vital signs and history","Prepared exam rooms and supplies","Scheduled appointments and answered patient calls","Updated patient records in the electronic health record"]],
+  [/emt|medic|corpsman|4n0/i,["Assessed and treated patients in emergency and field settings","Gave clear patient reports to receiving staff","Worked as part of a team under high pressure","Maintained and restocked medical equipment and supplies"]],
+  [/sitter|observer/i,["Provided continuous observation to keep patients safe","Reported safety concerns to the nurse right away","Documented observations according to unit policy"]],
+  [/clerk|coordinator|receptionist|front desk|office|registration|access/i,["Answered phones and directed calls in a busy setting","Kept records and schedules accurate and up to date","Greeted and checked in visitors and patients","Protected confidential information"]],
+  [/phleb/i,["Collected blood samples following safety and labeling procedures","Put anxious patients at ease during blood draws","Labeled and processed specimens accurately"]],
+  [/barista|server|host|cook|kitchen|restaurant|coffee|food service/i,["Delivered fast, friendly service in a high-volume setting","Worked as part of a small team during peak hours","Followed food safety and sanitation standards","Trained new team members on procedures","Handled cash and card payments accurately"]],
+  [/cashier|retail|sales|customer service|store/i,["Helped customers find what they needed and solved problems","Handled cash and card payments accurately","Kept the store stocked, clean, and organized","Stayed calm and polite with frustrated customers"]],
+  [/child|nanny|camp|youth|tutor|mentor|coach/i,["Supervised children and kept them safe","Planned age-appropriate activities","Communicated with parents about progress and concerns","Helped students understand difficult material"]],
+  [/lifeguard/i,["Watched swimmers and responded quickly to emergencies","Kept CPR and first aid skills current","Enforced safety rules calmly and consistently"]],
+  [/warehouse|delivery|driver|farm|ranch|mechanic|maintenance|logistics|supply/i,["Completed physical work safely and efficiently","Met daily deadlines and quotas","Followed safety procedures and reported hazards","Worked reliably on early, late, or weekend shifts"]],
+  [/family|grandparent|parent|sibling|respite|caregiv/i,["Helped a family member with meals, hygiene, and getting around","Kept track of medications, appointments, and changes in health","Communicated with doctors and family about care needs","Provided companionship and emotional support"]],
+  [/volunteer|church|ministry|mission|food bank|shelter|relief|community/i,["Served at community events and outreach","Worked with people from many different backgrounds","Set up, organized, and cleaned up for events","Supported staff wherever help was needed"]],
+  [/officer|government|captain|lead|resident assistant|\bra\b|organizer|representative|small group/i,["Organized events and meetings for members","Coordinated a team toward a shared goal","Communicated updates between members and leaders","Mentored newer members"]],
+  [/military|infantry|administration|communications|police/i,["Followed procedures precisely under pressure","Led or supported a team in demanding conditions","Maintained accountability for equipment and personnel"]]
+];
+function bulletSuggestions(e){
+  const key=`${e.type||""} ${e.title||""} ${e.org||""}`; const have=(e.bullets||"").toLowerCase();
+  let out=[]; BULLET_LIB.forEach(([re,list])=>{if(re.test(key))out.push(...list)});
+  if(!out.length&&e.title)out=["Showed up reliably and on time","Learned new tasks quickly","Worked well with coworkers and supervisors"];
+  return [...new Set(out)].filter(s=>!have.includes(s.toLowerCase())).slice(0,6);
+}
+
+/* ---------- reusable inputs ---------- */
+function choice(prompt,label,path,options,opt={}){
+  const v=getP(state,path)??""; const id="c_"+path.replace(/\W/g,"_");
+  const isOther=v!==""&&!options.includes(v); const other=isOther||state._other===path;
+  return `<label class="f" for="${id}">${prompt?`<span class="prompt">${esc(prompt)}</span>`:""}<span class="flabel">${esc(label)}${opt.optional===false?"":" (optional)"}</span>
+   <select id="${id}" data-choice="${path}"><option value="">Choose</option>${options.map(o=>`<option ${o===v?"selected":""}>${esc(o)}</option>`).join("")}<option value="__other" ${other?"selected":""}>${esc(opt.otherLabel||"Other (type my own)")}</option></select></label>
+   ${other?`<label class="f" style="margin-top:-.4rem"><span class="flabel">Type your own</span><input type="text" data-bind="${path}" data-fix="${opt.fix||"words"}" value="${esc(isOther?v:"")}" spellcheck="true" autocapitalize="words"></label>`:""}`;
+}
+function chips(prompt,label,path,options,otherPath,otherLabel){
+  const sel=(getP(state,path)||"").split(", ").filter(Boolean);
+  return `<div class="f"><span class="prompt">${esc(prompt)}</span><span class="flabel">${esc(label)} (optional, pick any)</span>
+   <div class="pill-row" role="group" aria-label="${esc(label)}">${options.map(o=>`<button type="button" class="pill" data-act="chip" data-path="${path}" data-val="${esc(o)}" aria-pressed="${sel.includes(o)}">${esc(o)}</button>`).join("")}</div>
+   ${otherPath?`<label class="f" style="margin-top:.5rem"><span class="flabel">${esc(otherLabel||"Something else? Type it here")}</span><input type="text" data-bind="${otherPath}" data-fix="first" value="${esc(getP(state,otherPath)||"")}" spellcheck="true" autocapitalize="sentences"></label>`:""}</div>`;
+}
+function monthYear(label,path,allowPresent){
+  const v=getP(state,path)||""; const [m,y]=v==="Present"?["Present",""]:v.split(" ");
+  const years=[];for(let yr=TODAY.getFullYear()+1;yr>=TODAY.getFullYear()-15;yr--)years.push(String(yr));
+  return `<div class="f"><span class="flabel">${esc(label)}</span><div class="row" style="flex-wrap:nowrap">
+   <select data-my="${path}" data-part="m" aria-label="${esc(label)} month"><option value="">Month</option>${allowPresent?`<option ${m==="Present"?"selected":""}>Present</option>`:""}${OPT.months.map(x=>`<option ${x===m?"selected":""}>${x}</option>`).join("")}</select>
+   ${m==="Present"?"":`<select data-my="${path}" data-part="y" aria-label="${esc(label)} year"><option value="">Year</option>${years.map(x=>`<option ${x===y?"selected":""}>${x}</option>`).join("")}</select>`}</div></div>`;
+}
+function quickAdd(label,targetPath,options){
+  const cur=(getP(state,targetPath)||"").toLowerCase();
+  return `<div class="pill-row" aria-label="${esc(label)}" style="margin:-.4rem 0 .6rem">${options.filter(o=>!cur.includes(o.toLowerCase())).map(o=>`<button type="button" class="pill" data-act="quickadd" data-path="${targetPath}" data-val="${esc(o)}">+ ${esc(o)}</button>`).join("")}</div>`;
+}
+
+/* ---------- My Story ---------- */
+const STORY_TABS=[["about","About me"],["education","My education"],["experience","My experience"],["skills","Skills and credentials"],["goals","Goals and availability"],["accomplishments","Accomplishments"]];
+views.story = (sub) => {
+  sub=STORY_TABS.some(t=>t[0]===sub)?sub:"about";
+  const tabs=`<div class="tabs" role="navigation" aria-label="My Story sections">${STORY_TABS.map(([k,l])=>`<a href="#story-${k}" aria-current="${k===sub}">${l}</a>`).join("")}</div>`;
+  const idx=STORY_TABS.findIndex(t=>t[0]===sub); const next=STORY_TABS[idx+1];
+  const nav=next?`<div class="row" style="margin-top:1.2rem"><a class="btn green" href="#story-${next[0]}" data-act="savesection">Save and continue</a><a class="btn ghost" href="#story-${next[0]}">Skip for now</a></div>`
+    :`<div style="margin-top:1.2rem"><button class="btn green wide" data-act="savestory">Save my story</button></div>`;
+  return `<h1>My Story</h1><p class="lead">Tell me once. WillHelp reuses this in your documents, job matches, and next steps. Share as much or as little as you want. That's enough to get started.</p>
+  <p class="note">I've filled in the Simpson basics for you. Change anything that isn't right. Spelling and capitals get fixed when you leave a field.</p>${tabs}<div class="card">${storySection(sub)}${nav}</div>`;
+};
+function listEditor(arr, kind){
+  return state.profile[arr].map((it,i)=>`<div class="list-item">${kind(it,i)}<button class="btn ghost small" data-act="rm" data-arr="${arr}" data-i="${i}">Remove</button></div>`).join("");
+}
+function storySection(sub){
+  const p="profile";
+  switch(sub){
+  case "about": return `<h2 style="margin-top:0">About me</h2>
+    ${field("Tell me what name you go by.","Preferred name",p+".about.preferredName",{auto:"given-name",fix:"words"})}
+    ${field("Only if a document needs it.","Legal name",p+".about.legalName",{auto:"name",fix:"words"})}
+    ${checkbox("Use my legal name on documents instead of my preferred name",p+".about.useLegal")}
+    ${field("","Email",p+".about.email",{type:"email",auto:"email"})}
+    ${field("","Phone",p+".about.phone",{type:"tel",auto:"tel"})}
+    ${choice("A general area is plenty.","City or general location",p+".about.city",OPT.cities)}
+    <h3>Show on my documents</h3>
+    ${checkbox("Email",p+".about.showEmail")}${checkbox("Phone",p+".about.showPhone")}${checkbox("City",p+".about.showCity")}`;
+  case "education": return `<h2 style="margin-top:0">My education</h2>
+    ${checkbox("I'm currently enrolled in Simpson's BSN program",p+".education.enrolledConfirmed")}${checkbox("I'm a full-time student",p+".education.fullTime")}
+    ${field("","School",p+".education.school",{fix:"words"})}
+    ${choice("","Program",p+".education.program",OPT.programs)}
+    ${choice("If you know it.","Cohort",p+".education.cohort",OPT.cohorts,{otherLabel:"Other or not sure"})}
+    ${choice("","Catalog year",p+".education.catalogYear",OPT.catalogYears,{otherLabel:"Other or not sure"})}
+    ${field("","Expected graduation",p+".education.expectedGrad",{type:"date"})}
+    ${field("Tell me about school before Simpson, if any.","Previous education",p+".education.prevEducation",{type:"textarea"})}
+    ${quickAdd("Quick add previous education",p+".education.prevEducation",OPT.prevEd)}
+    ${field("","GPA",p+".education.gpa",{ph:"3.45"})}${checkbox("Show GPA on documents",p+".education.showGpa")}
+    ${chips("Any honors?","Honors",p+".education.honors",OPT.honors,p+".education.honorsOther","Another honor? Type it here")}
+    <h3>Clinical sites, for your résumé</h3>
+    <p class="note">Your courses and statuses live in <a href="#journey">My Nursing Journey</a>. If a course had clinical, tell me where. I won't guess a site.</p>
+    ${DATA.curriculum.courses.filter(c=>c.clinicalPossible&&active(c.code)).map(c=>{const cc=state.profile.education.courses[c.code]||{};return `<div class="list-item"><b>${esc(c.nick)}</b> <span class="note">${esc(c.code)}</span>
+      <label class="check"><input type="checkbox" data-coursefield="${c.code}" data-k="clinical" ${cc.clinical?"checked":""}><span>I had supervised student clinical in this course</span></label>
+      ${chips("Pick every place you went. I won't guess.","Clinical sites",`profile.education.courses.${c.code}.site`,CLIN_SITES,`profile.education.courses.${c.code}.siteOther`,"Another site? Type it here")}
+      ${chips("Which units?","Units",`profile.education.courses.${c.code}.unit`,CLIN_UNITS,`profile.education.courses.${c.code}.unitOther`,"Another unit? Type it here")}</div>`}).join("")||`<p class="note">Mark courses in progress or completed in My Nursing Journey and they'll appear here.</p>`}`;
+  case "experience": return `<h2 style="margin-top:0">My experience</h2>
+    <p>Tell me about work you've done, even if it wasn't in healthcare. Military, caregiving, and volunteer work count too.</p>
+    <div class="ctx">Supervised student clinical comes from your courses and is always labeled as student experience, never as employment.</div>
+    ${listEditor("experience",(e,i)=>{
+      const sug=bulletSuggestions(e); const lines=(e.bullets||"").split("\n").map(x=>x.trim()).filter(Boolean);
+      const pol=lines.map((l,j)=>[j,l,polishLine(l)]).filter(([j,l,pl])=>pl&&pl!==l);
+      return `
+      ${sel("Type",`profile.experience.${i}.type`,EXP_TYPES)}
+      ${choice("","Role or title",`profile.experience.${i}.title`,OPT.roleTitles[e.type||"employment"]||[],{optional:false})}
+      ${field("","Organization",`profile.experience.${i}.org`,{fix:"words"})}
+      ${choice("","Location",`profile.experience.${i}.location`,OPT.cities)}
+      <div class="grid two">${monthYear("Start",`profile.experience.${i}.start`,false)}${monthYear("End",`profile.experience.${i}.end`,true)}</div>
+      ${field("In your own words, one per line.","What you did",`profile.experience.${i}.bullets`,{type:"textarea"})}
+      ${pol.length?`<div class="sugg-box"><b>Want it to sound a little stronger?</b>${pol.map(([j,l,pl])=>`<div class="sugg-row"><span><span class="note">You wrote:</span> ${esc(l)}<br><span class="note">Suggested:</span> <b>${esc(pl)}</b></span><button type="button" class="btn small sec" data-act="usepolish" data-i="${i}" data-j="${j}" data-text="${esc(pl)}">Use this</button></div>`).join("")}</div>`:""}
+      ${sug.length?`<div class="sugg-box"><b>Ideas for ${esc(e.title||"this role")}</b><p class="note" style="margin:.2rem 0 .4rem">Tap only the ones that are true for you. You can edit them after.</p>${sug.map(x=>`<button type="button" class="pill" data-act="addbullet" data-i="${i}" data-text="${esc(x)}">+ ${esc(x)}</button>`).join(" ")}</div>`:""}`})}
+    <button class="btn sec" data-act="add" data-arr="experience">Add experience</button>`;
+  case "skills": {
+    const have=new Set(state.profile.skills.map(s=>(s.name||"").toLowerCase()));
+    return `<h2 style="margin-top:0">Skills and credentials</h2>
+    <h3>Credentials</h3>
+    <div class="ctx">Only credentials you currently hold appear as certifications on documents. Course completion is not a certification.</div>
+    ${listEditor("credentials",(c,i)=>`
+      ${sel("Credential",`profile.credentials.${i}.key`,CRED_KEYS.map(k=>[k.key,k.label]))}
+      ${field("","Name as it appears on your card",`profile.credentials.${i}.name`,{fix:"words"})}
+      ${choice("","Issuer",`profile.credentials.${i}.issuer`,OPT.issuers)}
+      ${field("","Expiration date",`profile.credentials.${i}.expires`,{type:"date"})}
+      ${sel("Status",`profile.credentials.${i}.kind`,[["held","I currently hold this"],["inprogress","In progress"]])}`)}
+    <button class="btn sec" data-act="add" data-arr="credentials">Add credential</button>
+    <h3 style="margin-top:1.2rem">Skills</h3>
+    <p class="note">Tap the skills you have. Then tell me how you know each one, so classroom exposure stays separate from supervised practice.</p>
+    ${Object.entries(OPT.skillSuggest).map(([g,list])=>`<div class="f"><span class="flabel">${esc(g)}</span><div class="pill-row">${list.map(x=>`<button type="button" class="pill" data-act="addskill" data-val="${esc(x)}" data-group="${esc(g)}" aria-pressed="${have.has(x.toLowerCase())}">${esc(x)}</button>`).join("")}</div></div>`).join("")}
+    ${listEditor("skills",(s,i)=>`${field("","Skill",`profile.skills.${i}.name`,{optional:false,fix:"first"})}${sel("How you know it",`profile.skills.${i}.kind`,[["classroom","Classroom or lab exposure"],["supervised","Supervised student practice"],["held","Independently qualified (for example, from a job or credential)"]])}`)}
+    <button class="btn sec" data-act="add" data-arr="skills">Add a skill that isn't listed</button>
+    <h3 style="margin-top:1.2rem">Languages</h3>
+    ${listEditor("languages",(l,i)=>`${choice("","Language",`profile.languages.${i}.name`,OPT.langs,{optional:false})}${choice("","How well (your own description)",`profile.languages.${i}.level`,OPT.langLevels,{fix:"first"})}`)}
+    <button class="btn sec" data-act="add" data-arr="languages">Add language</button>`;}
+  case "goals": return `<h2 style="margin-top:0">Goals and availability</h2>
+    ${chips("Tell me what kind of nursing interests you.","Nursing interests",p+".goals.interests",OPT.interests,p+".goals.interestsOther")}
+    ${field("Tell me whether you need work now or are exploring options.","Work now or exploring",p+".goals.needNow",{type:"select",options:["I need work now","Exploring options","Not looking right now"]})}
+    ${chips("What kinds of jobs would you consider?","Job types",p+".goals.jobTypes",OPT.jobTypes,p+".goals.jobTypesOther")}
+    ${field("Tell me what hours would realistically work around school.","Hours I could work",p+".goals.availability",{type:"select",options:OPT.hours})}
+    ${field("","Anything else about your schedule?",p+".goals.availabilityNote",{ph:"Example: No Tuesdays, clinical days change each semester"})}
+    ${chips("Which shifts work for you?","Preferred shifts",p+".goals.shifts",OPT.shifts)}
+    ${field("","Commute limit",p+".goals.commute",{type:"select",options:["Redding only","Up to 20 minutes","Up to 40 minutes","Up to an hour","Online only"]})}
+    ${chips("Where would you work?","Preferred locations",p+".goals.locations",OPT.cities.map(c=>c.replace(", CA","")),p+".goals.locationsOther")}
+    ${field("Tell me what you'd feel comfortable spending, or I can start with free options.","Budget for extra training",p+".goals.budget",{type:"select",options:["Free options only","Up to $50","Up to $150","Up to $300","More if it clearly helps"]})}`;
+  case "accomplishments": return `<h2 style="margin-top:0">My accomplishments</h2>
+    <p>Awards, projects, and moments of teamwork, growth, service, or leadership. These become interview stories and recommendation material.</p>
+    <div class="warnbox">Never include patient names, dates of birth, room numbers, or anything that could identify a patient.</div>
+    ${listEditor("accomplishments",(a,i)=>`${choice("","Type",`profile.accomplishments.${i}.type`,OPT.accTypes,{optional:false,fix:"first"})}${field("","Title",`profile.accomplishments.${i}.title`,{optional:false,fix:"first"})}${field("In your own words.","What happened and what you did",`profile.accomplishments.${i}.detail`,{type:"textarea"})}
+    <div class="sugg-box"><b>Need a place to start?</b><p class="note" style="margin:.2rem 0 .4rem">Tap a starter, then finish the sentence.</p>${accStarters(a.type).map(x=>`<button type="button" class="pill" data-act="starter" data-path="profile.accomplishments.${i}.detail" data-text="${esc(x)}">${esc(x.trim())}...</button>`).join(" ")}</div>`)}
+    <button class="btn sec" data-act="add" data-arr="accomplishments">Add accomplishment</button>`;
+  }
+  return "";
+}
+function sel(label,path,options){return field("",label,path,{type:"select",options,optional:false})}
+
+/* ---------- Create ---------- */
+views.create = (sub) => {
+  if(sub==="resume") return viewResume();
+  if(sub==="rec") return viewRec();
+  if(sub==="cna") return viewCNA();
+  if(sub==="precep") return viewPrecep();
+  return `<h1>Create</h1><p class="lead">Every document starts as an editable draft from your story. Nothing is sent anywhere unless you send it yourself.</p>
+  <div class="actions">
+   <a class="bigbtn" href="#create-resume">Résumé<span>Clean, hiring-system friendly</span></a>
+   <a class="bigbtn" href="#create-rec">Recommendation request<span>Message plus organized packet</span></a>
+   <a class="bigbtn" href="#create-cna">CNA equivalency<span>Checklist, tracker, school letter</span></a>
+   <a class="bigbtn" href="#create-precep">Preceptorship prep<span>Preferences, materials, questions</span></a>
+  </div>
+  <div class="card"><h3>Coming in the next stage</h3><p class="note" style="margin:0">Cover letters, scholarship essay drafts, interview practice, and an experience journal. They're not built yet, so there are no buttons for them.</p></div>
+  ${docHistory()}`;
+};
+function docHistory(){
+  if(!state.docs.length)return "";
+  return `<h2>My documents</h2>${state.docs.slice().reverse().map(d=>`<div class="card"><b>${esc(d.title)}</b> <span class="badge ${d.status==="final"?"b-ok":"b-warn"}">${d.status==="final"?"Finalized":"Draft"}</span>
+   <div class="note">${d.status==="final"?"Finalized "+fmtDate(d.finalizedAt):"Updated "+fmtDate(d.updatedAt)}</div>
+   <div class="row" style="margin-top:.4rem">${d.status==="draft"?`<a class="btn small" href="#create-resume" data-act="opendoc" data-id="${d.id}">Open draft</a>`:`<button class="btn small sec" data-act="viewfinal" data-id="${d.id}">View</button><button class="btn small sec" data-act="printdoc" data-id="${d.id}">Print or save PDF</button>`}</div></div>`).join("")}`;
+}
+
+/* ----- résumé generation: only uses what the student entered. Gaps become visible placeholders. ----- */
+function ph(t){return `<span class="ph" data-ph="1" data-orig="[${esc(t)}]">[${esc(t)}]</span>`}
+/* A placeholder the student typed over becomes real text. */
+function settlePlaceholders(root){root.querySelectorAll("[data-ph]").forEach(e=>{if(e.textContent!==e.dataset.orig){e.replaceWith(document.createTextNode(e.textContent))}})}
+function hasBlanks(html){const t=document.createElement("div");t.innerHTML=html;settlePlaceholders(t);return t.querySelectorAll("[data-ph]").length>0}
+function isExpired(c){return !!(c.expires&&daysUntil(c.expires)<0)}
+function resumeItems(){
+  const P=state.profile, items=[];
+  P.experience.forEach(e=>items.push({id:"exp-"+e.id,label:`${e.title||"Experience"}${e.org?", "+e.org:""}`,group:"Experience"}));
+  DATA.curriculum.courses.forEach(c=>{const cc=P.education.courses[c.code];if(cc&&cc.clinical&&active(c.code))items.push({id:"clin-"+c.code,label:`${c.nick} clinical (supervised student)`,group:"Clinical"})});
+  P.credentials.filter(c=>c.kind==="held"&&!isExpired(c)).forEach(c=>items.push({id:"cred-"+c.id,label:c.name||c.key,group:"Credentials"}));
+  P.skills.forEach(s=>items.push({id:"skill-"+s.id,label:`${s.name} (${s.kind==="classroom"?"classroom":s.kind==="supervised"?"supervised practice":"qualified"})`,group:"Skills",defaultOff:s.kind==="classroom"}));
+  P.languages.forEach(l=>items.push({id:"lang-"+l.id,label:l.name,group:"Languages"}));
+  P.accomplishments.filter(a=>RESUME_ACC_TYPES.includes(a.type)).forEach(a=>items.push({id:"acc-"+a.id,label:a.title,group:"Awards and projects"}));
+  if(P.education.gpa)items.push({id:"gpa",label:"GPA",group:"Education",defaultOff:!P.education.showGpa});
+  return items;
+}
+function buildResumeHTML(doc){
+  const P=state.profile, A=P.about, ex=new Set(doc.excludes||[]);
+  const nm=(A.useLegal&&A.legalName)?A.legalName:(A.preferredName||A.legalName);
+  const contact=[A.showCity&&A.city?esc(A.city):"",A.showEmail&&A.email?esc(A.email):"",A.showPhone&&A.phone?esc(A.phone):""].filter(Boolean);
+  let h=`<h1>${nm?esc(nm):ph("Your name")}</h1><div class="contact">${contact.length?contact.join(" &nbsp;|&nbsp; "):ph("Contact details: add in My Story")}</div>`;
+  h+=doc.summary?`<p>${esc(doc.summary)}</p>`:`<p>${ph("Optional: a one or two sentence summary. Pick one above or write your own")}</p>`;
+  // Education
+  const E=P.education;
+  h+=`<h2>Education</h2><div class="ent"><b>${E.program?esc(E.program):ph("Program")}</b>, ${E.school?esc(E.school):ph("School")}${/simpson/i.test(E.school||"")?", Redding, CA":""}<br>${E.expectedGrad?"Expected graduation: "+fmtDate(E.expectedGrad):ph("Expected graduation date")}`;
+  const gpaOn=E.showGpa?!ex.has("gpa"):(doc.includeClassroom||[]).includes("gpa");
+  if(E.gpa&&gpaOn)h+=`<br>GPA: ${esc(E.gpa)}`;
+  {const hon=[E.honors,E.honorsOther].filter(Boolean).join(", ");if(hon)h+=`<br>Honors: ${esc(hon)}`;}
+  h+=`</div>`;
+  if(E.prevEducation)h+=`<div class="ent">${esc(E.prevEducation).replace(/\n/g,"<br>")}</div>`;
+  // Clinical (always labeled supervised student)
+  const clin=DATA.curriculum.courses.filter(c=>{const cc=E.courses[c.code];return cc&&cc.clinical&&active(c.code)&&!ex.has("clin-"+c.code)});
+  if(clin.length){h+=`<h2>Supervised Student Clinical Experience</h2><ul>${clin.map(c=>{const cc=E.courses[c.code];return `<li>${esc(c.name)} (${esc(c.code)}): supervised student clinical rotation${(()=>{const sites=[cc.site,cc.siteOther].filter(Boolean).join(", "),units=[cc.unit,cc.unitOther].filter(Boolean).join(", ");return (sites||units)?", "+esc([sites,units?"("+units+")":""].filter(Boolean).join(" ")):", "+ph("clinical site")})()}${cc.status==="in_progress"?" (in progress)":""}</li>`}).join("")}</ul>`}
+  // Experience by type
+  EXP_TYPES.forEach(([t,lab])=>{
+    const rows=P.experience.filter(e=>(e.type||"employment")===t&&!ex.has("exp-"+e.id));
+    if(!rows.length)return;
+    h+=`<h2>${t==="employment"?"Work Experience":lab}</h2>`+rows.map(e=>{
+      const b=(e.bullets||"").split("\n").map(s=>s.trim()).filter(Boolean);
+      return `<div class="ent"><b>${e.title?esc(e.title):ph("role")}</b>${e.org?", "+esc(e.org):""}${e.location?", "+esc(e.location):""}<br><span>${e.start||e.end?esc(e.start||"")+" to "+esc(e.end||""):ph("dates")}</span>${b.length?`<ul>${b.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:`<ul><li>${ph("what you did, in your own words")}</li></ul>`}</div>`}).join("");
+  });
+  const creds=P.credentials.filter(c=>c.kind==="held"&&!isExpired(c)&&!ex.has("cred-"+c.id));
+  if(creds.length)h+=`<h2>Certifications</h2><ul>${creds.map(c=>`<li>${esc(c.name||CRED_KEYS.find(k=>k.key===c.key)?.label||"")}${c.issuer?", "+esc(c.issuer):""}${c.expires?" (expires "+fmtDate(c.expires)+")":""}</li>`).join("")}</ul>`;
+  const skills=P.skills.filter(s=>{const id="skill-"+s.id;return s.name&&!(ex.has(id))&&!(s.kind==="classroom"&&!(doc.includeClassroom||[]).includes(id))});
+  if(skills.length)h+=`<h2>Skills</h2><ul>${skills.map(s=>`<li>${esc(s.name)}${s.kind==="supervised"?" (supervised student practice)":s.kind==="classroom"?" (classroom and lab)":""}</li>`).join("")}</ul>`;
+  const langs=P.languages.filter(l=>l.name&&!ex.has("lang-"+l.id));
+  if(langs.length)h+=`<h2>Languages</h2><ul>${langs.map(l=>`<li>${esc(l.name)}${l.level?" ("+esc(l.level)+", self-described)":""}</li>`).join("")}</ul>`;
+  const acc=P.accomplishments.filter(a=>RESUME_ACC_TYPES.includes(a.type)&&a.title&&!ex.has("acc-"+a.id));
+  if(acc.length)h+=`<h2>Awards and Projects</h2><ul>${acc.map(a=>`<li>${esc(a.title)}${a.detail?": "+esc(a.detail):""}</li>`).join("")}</ul>`;
+  return h;
+}
+function currentDraft(){
+  let d=state.docs.find(x=>x.id===state.activeDoc&&x.status==="draft");
+  if(!d)d=state.docs.slice().reverse().find(x=>x.kind==="resume"&&x.status==="draft");
+  return d;
+}
+function viewResume(){
+  const d=currentDraft();
+  if(!d) return `<h1>Résumé builder</h1><p class="lead">Tell me what this résumé is for. I'll start a draft from your story. Missing pieces show up as highlighted blanks, never made-up details.</p>
+   <div class="card">${(state._newTarget=state._newTarget||"Student employment","")}${field("","Résumé for","_newTarget",{type:"select",options:RESUME_TARGETS,optional:false})}
+   <button class="btn" data-act="newresume">Start my draft</button></div>${docHistory()}`;
+  const items=resumeItems(); const ex=new Set(d.excludes||[]); const incl=new Set(d.includeClassroom||[]);
+  const html=d.customHtml||buildResumeHTML(d);
+  const groups=[...new Set(items.map(i=>i.group))];
+  return `<h1>Résumé: ${esc(d.target)}</h1>
+  <p class="lead">Here's a draft. Tell me what you'd like to change.</p>
+  ${state.profile.credentials.filter(c=>c.kind==="held"&&isExpired(c)).map(c=>`<div class="warnbox">${esc(c.name||"A credential")} expired ${fmtDate(c.expires)}, so it's left off. Renew it or update the date in My Story.</div>`).join("")}
+  ${(d.customHtml||d.summary)&&d.storyHash&&d.storyHash!==FP.resume()?staleNote(d.customHtml?"Your story changed since you edited this draft. Updating replaces your edited wording with fresh text.":"Your story changed since you picked this summary. Check the new summary ideas below.","refresh"):""}
+  ${d.customHtml?`<div class="warnbox">You've edited the wording. "Update from my story" would replace your edits with fresh text from your profile.</div>`:""}
+  <details class="card"><summary>What this draft uses (${items.length} items)</summary>
+   <p class="note">Uncheck anything you want left off this résumé. It stays in your story.</p>
+   ${groups.map(g=>`<h3>${esc(g)}</h3>`+items.filter(i=>i.group===g).map(i=>{const on=i.defaultOff?incl.has(i.id):!ex.has(i.id);return `<label class="check"><input type="checkbox" data-incl="${i.id}" data-defoff="${i.defaultOff?1:0}" ${on?"checked":""}><span>${esc(i.label)}</span></label>`}).join("")).join("")||`<p class="note">Your story is empty so far. That's fine. Add details in <a href="#story">My Story</a> whenever you're ready.</p>`}
+  </details>
+  <div class="card"><h3 style="margin-top:0">Summary at the top</h3>
+   <p class="note" style="margin-top:0">Tap one to use it, then change any words you like. Each one is built only from what's in your story.</p>
+   <div class="pill-row">${summarySuggestions(d).map(x=>`<button type="button" class="pill" style="text-align:left" data-act="usesummary" data-text="${esc(x)}">${esc(x)}</button>`).join("")}</div>
+   ${field("","Summary",`docs.${state.docs.indexOf(d)}.summary`,{type:"textarea"})}</div>
+  <div class="row"><button class="btn sec small" data-act="editwording">${state._editing?"Done editing":"Edit wording"}</button><button class="btn sec small" data-act="refresh">Update from my story</button></div>
+  <div class="doc" id="docPreview" ${state._editing?'contenteditable="true" aria-label="Editable résumé"':""}>${html}</div>
+  <p class="note">Highlighted blanks are placeholders. They're left out when you print or download unless you fill them in.</p>
+  <div class="row" style="margin-top:.6rem">
+   <button class="btn" data-act="printdraft">Print or save as PDF</button>
+   <button class="btn sec" data-act="dl-doc">Download Word-compatible (.doc)</button>
+   <button class="btn sec" data-act="dl-txt">Download plain text</button>
+   <button class="btn sec" data-act="copyresume">Copy text</button>
+   <button class="btn sec" data-act="finalize">Finalize this version</button>
+   <button class="btn ghost" data-act="discard">Delete draft</button>
+  </div>
+  ${EMBED?`<p class="note">In this preview window, printing and downloads may be blocked. Use Copy text here; print, PDF, and file downloads work when WillHelp is opened as its own page.</p>`:""}
+  <p class="note">Finalized versions are saved as-is. Later changes to your story never change them.</p>
+  ${docHistory()}`;
+}
+function cleanHTML(html){const t=document.createElement("div");t.innerHTML=html;settlePlaceholders(t);t.querySelectorAll("[data-ph]").forEach(e=>{const li=e.closest("li");if(li&&li.textContent.trim()===e.textContent.trim())li.remove();else if(e.parentElement&&e.parentElement.tagName==="P"&&e.parentElement.textContent.trim()===e.textContent.trim())e.parentElement.remove();else e.remove()});t.querySelectorAll("ul").forEach(u=>{if(!u.children.length)u.remove()});return t.innerHTML}
+function htmlToText(html){const t=document.createElement("div");t.innerHTML=html.replace(/<li>/g,"<li>- ").replace(/<\/(h1|h2|div|p|li)>/g,"\n</$1>").replace(/<br>/g,"\n");return t.textContent.replace(/\n{3,}/g,"\n\n").trim()}
+function printHTML(html){const pa=$("#print-area");pa.innerHTML=`<div class="doc">${html}</div>`;try{window.print()}catch(_){toast("Printing isn't available in this window. Use Copy text.")}setTimeout(()=>pa.innerHTML="",1000)}
+
+/* ----- recommendation request ----- */
+function viewRec(){
+  const r=state._rec||(state._rec={recommender:"",relationship:"",opportunity:"",deadline:"",instructions:"",acc:[],docs:[],message:""});
+  const accs=state.profile.accomplishments; const finals=state.docs.filter(d=>d.status==="final");
+  const bind=(k,label,prompt,type)=>`<label class="f"><span class="prompt">${esc(prompt||"")}</span><span class="flabel">${esc(label)}</span>${type==="textarea"?`<textarea data-rec="${k}" data-fix="sentences" spellcheck="true">${esc(r[k])}</textarea>`:`<input type="${type||"text"}" data-rec="${k}" ${type==="date"?"":'data-fix="first" spellcheck="true"'} value="${esc(r[k])}">`}</label>`;
+  return `<h1>Request a recommendation</h1>
+  <p class="lead">I'll help you ask clearly and give your recommender what they need. You send it yourself.</p>
+  <div class="ctx">WillHelp never writes in your recommender's voice, adds signatures, or claims anyone endorsed you. The letter is theirs to write.</div>
+  <div class="card">
+   ${bind("recommender","Recommender's name","Tell me who you'd like to ask.")}
+   ${choice("Tell me how this person knows your work.","How they know you","_rec.relationship",relOptions(),{optional:false,fix:"plain"})}
+   ${choice("What is the recommendation for?","Opportunity","_rec.opportunity",oppOptions(),{optional:false,fix:"plain"})}
+   ${bind("deadline","Deadline","","date")}
+   ${choice("How should they send it?","Submission instructions","_rec.instructions",REC_INSTR,{optional:false,fix:"first",otherLabel:"Something else (paste the instructions)"})}
+   <h3>Accomplishments to remind them of</h3>
+   ${accs.length?accs.map(a=>`<label class="check"><input type="checkbox" data-recacc="${a.id}" ${r.acc.includes(a.id)?"checked":""}><span>${esc(a.title||"Untitled")}</span></label>`).join(""):`<p class="note">None saved yet. <a href="#story-accomplishments">Add accomplishments</a> to include them.</p>`}
+   <h3>Documents to attach</h3>
+   ${finals.length?finals.map(d=>`<label class="check"><input type="checkbox" data-recdoc="${d.id}" ${r.docs.includes(d.id)?"checked":""}><span>${esc(d.title)}</span></label>`).join(""):`<p class="note">No finalized documents yet. Finalize a résumé to attach it.</p>`}
+   <button class="btn" data-act="genrec">Draft my request and packet</button>
+  </div>
+  ${r.message?`<div class="card"><h2 style="margin-top:0">Your request message</h2><p class="note">Edit anything. This is your message, in your words.</p>
+   ${r.msgHash&&r.msgHash!==FP.rec()?staleNote("Your story changed since this message was drafted.","genrec"):""}
+   <textarea data-rec="message" aria-label="Message to your recommender" style="min-height:260px">${esc(r.message)}</textarea>
+   <div class="row" style="margin-top:.5rem"><button class="btn" data-act="copyrec">Copy message</button><button class="btn sec" data-act="dlpacket">Download packet</button><button class="btn sec" data-act="printpacket">Print packet</button></div></div>`:""}`;
+}
+function genRec(){
+  const r=state._rec, A=state.profile.about; const nm=A.preferredName||A.legalName;
+  const accs=state.profile.accomplishments.filter(a=>r.acc.includes(a.id));
+  const deadline=r.deadline?fmtDate(r.deadline):"[deadline]";
+  r.message=`Hi ${r.recommender||"[name]"},
+
+I'm applying for ${r.opportunity||"[opportunity]"}, and I'd be grateful if you would consider writing a recommendation for me. ${r.relationship?"You know my work as "+r.relationship.trim().replace(/\.$/,"").replace(/^My /,"my ")+".":"[How they know you]"}
+
+The deadline is ${deadline}. ${r.instructions?r.instructions.trim().replace(/[^.!?]$/,"$&."):"[Submission instructions]"}
+
+${accs.length?"A few things you might remember:\n"+accs.map(a=>"- "+(a.title||"")+(a.detail?": "+a.detail:"")).join("\n")+"\n\n":""}I've put together a short packet with the details${r.docs.length?" and my résumé":""}. If you're not able to write one, I completely understand. Thank you for considering it.
+
+${nm||"[Your name]"}${A.email?"\n"+A.email:""}${A.phone?"\n"+A.phone:""}`;
+}
+function recPacket(){
+  const r=state._rec; const accs=state.profile.accomplishments.filter(a=>r.acc.includes(a.id)); const docs=state.docs.filter(d=>r.docs.includes(d.id));
+  return `<h1>Recommendation request packet</h1><div class="contact">Prepared by the student with WillHelp. Not reviewed or endorsed by the recommender.</div>
+  <h2>Request</h2><div class="ent"><b>Recommender:</b> ${esc(r.recommender)}<br><b>Opportunity:</b> ${esc(r.opportunity)}<br><b>Deadline:</b> ${r.deadline?fmtDate(r.deadline):""}<br><b>Submission:</b> ${esc(r.instructions)}</div>
+  <h2>How we know each other (student's description)</h2><p>${esc(r.relationship)}</p>
+  ${accs.length?`<h2>Accomplishments (student-reported)</h2><ul>${accs.map(a=>`<li><b>${esc(a.title)}</b>${a.detail?": "+esc(a.detail):""}</li>`).join("")}</ul>`:""}
+  ${docs.map(d=>`<h2>Attached: ${esc(d.title)}</h2>${d.html}`).join("")}`;
+}
+
+/* ----- CNA equivalency ----- */
+function viewCNA(){
+  const c=state.cna; const f=done("NURS 2310");
+  const checks=[["train","Confirm my training qualifies (CDPH says current or recent students need a sealed school letter confirming equivalent training, including at least Fundamentals of Nursing)"],["docs","Request official documentation from Simpson"],["app","Review the current CDPH application form and instructions on the CDPH site"],["fp","Check current fingerprint (Live Scan) requirements and cost"],["review","Wait for CDPH review"],["exam","Follow CDPH's competency exam instructions"],["verify","Confirm certification is issued and look it up on the state verification site"]];
+  if(!c.letter){c.letter=cnaLetter();c.letterHash=FP.cna()}
+  return `<h1>CNA equivalency path</h1>
+  ${f?`<p class="lead">Your nursing coursework may give you another path toward CNA certification. Tell me whether you'd like help checking the requirements.</p>`:`<p class="lead">This path usually opens after Foundations. You can look ahead now.</p>`}
+  <div class="ctx">Requirement published by the California Department of Public Health. Last checked ${fmtDate("2026-11-16")}. Qualifying coursework may support an equivalency application. It does not automatically make you certified.</div>
+  <div class="card"><h2 style="margin-top:0">Where I am</h2>
+   <div class="status-track">${CNA_STEPS.map((s,i)=>`<span class="${i<c.step?"done":i===c.step?"cur":""}">${esc(s)}</span>`).join("")}</div>
+   <label class="f"><span class="flabel">Current step</span><select data-cnastep>${CNA_STEPS.map((s,i)=>`<option value="${i}" ${i===c.step?"selected":""}>${esc(s)}</option>`).join("")}</select></label>
+   ${c.step===8?`<p class="note">Only mark this after you've seen your certificate on the state's verification lookup.</p>`:`<p class="note">WillHelp never marks you certified. Completing a course or passing an exam isn't the same as an issued certificate.</p>`}</div>
+  <div class="card"><h2 style="margin-top:0">Checklist</h2>
+   ${checks.map(([k,l])=>`<label class="check"><input type="checkbox" data-cnacheck="${k}" ${c.checks[k]?"checked":""}><span>${esc(l)}</span></label>`).join("")}
+   <div class="row" style="margin-top:.5rem"><a class="btn sec small" href="https://www.cdph.ca.gov/Programs/CHCQ/LCP/Pages/How-to-Complete-Your-Equivalency-Application-Package.aspx" target="_blank" rel="noopener">CDPH equivalency instructions</a><a class="btn sec small" href="https://www.cdph.ca.gov/Programs/CHCQ/LCP/Pages/CNA.aspx" target="_blank" rel="noopener">CDPH CNA page and forms</a></div>
+   <p class="note">CDPH contact listed on its forms: (916) 327-2445, cna@cdph.ca.gov. Use the official forms on the CDPH site; WillHelp doesn't copy procedures that may change. If instructions conflict, ask CDPH before you mail anything.</p>
+   <div class="warnbox">Don't enter your Social Security number, background details, or fingerprint information in WillHelp.</div></div>
+  <div class="card"><h2 style="margin-top:0">Request for school documentation</h2>
+   <p class="note">A draft to the School of Nursing or Registrar. Ask who handles this at Simpson before sending. Edit freely.</p>
+   ${c.letterHash&&c.letterHash!==FP.cna()?staleNote("Your name, contact, or school details changed since this letter was written.","resetcna"):""}
+   <textarea data-cnaletter aria-label="Letter to your school" style="min-height:260px">${esc(c.letter)}</textarea>
+   <div class="row" style="margin-top:.5rem"><button class="btn" data-act="copycna">Copy</button><button class="btn sec" data-act="resetcna">Rebuild from my story</button></div></div>`;
+}
+function cnaLetter(){
+  const A=state.profile.about,E=state.profile.education; const nm=A.legalName||A.preferredName;
+  return `Hello,
+
+I'm a nursing student in the ${E.program||"BSN program"} at ${E.school||"Simpson University"}${E.cohort?" ("+E.cohort+")":""}. I'm exploring the California CDPH equivalency path for CNA certification.
+
+CDPH's instructions ask current or recent students for a sealed letter from their school confirming equivalent training, including completion of at least Fundamentals of Nursing. Could you tell me who at Simpson prepares this letter and what you need from me? ${done("NURS 2310")?"I've completed NURS 2310, Foundations of Nursing & Professional Seminar.":"[Add the course you completed]"} I understand the school decides whether my coursework qualifies.
+
+Thank you,
+${nm||"[Your legal name]"}${A.email?"\n"+A.email:""}${A.phone?"\n"+A.phone:""}`;
+}
+
+/* ----- Preceptorship ----- */
+function viewPrecep(){
+  const p=state.precep, S=DATA.settings;
+  if(p.interests&&!state.profile.goals.interests){state.profile.goals.interests=p.interests;p.interests="";save()}
+  const checks=[["proc","Read Simpson's preceptorship process"],["coord","Confirm who the placement coordinator is"],["resume","Update my résumé"],["stmt","Write a short statement of interest"],["examples","Collect two or three examples from clinical"],["refs","Ask references early"],["prereq","Check prerequisites (immunizations, BLS, background, site requirements)"],["questions","Prepare questions about schedule and learning goals"]];
+  return `<h1>Preceptorship preparation</h1>
+  <p class="lead">Tell me what kind of nursing you'd like to explore in your preceptorship. We can get your materials ready and check how Simpson handles placements.</p>
+  <div class="card ${S.precepTiming?"":"tint"}"><h2 style="margin-top:0">Simpson's timeline</h2>
+   ${S.precepTiming?`<p>${esc(S.precepTiming)}</p><p class="note">Configured by the School of Nursing in WillHelp's admin settings.</p>`:`<p><span class="badge b-warn">Unconfirmed</span> Placement timing and deadlines haven't been configured yet. Ask the placement coordinator or your course faculty.</p>`}
+   ${S.precepCoordinator?`<p><b>Coordinator:</b> ${esc(S.precepCoordinator)}</p>`:""}
+   ${S.precepProcess?`<p>${esc(S.precepProcess)}</p>`:`<p class="note">Follow Simpson's coordinated placement process. Don't contact sites on your own unless the School of Nursing tells you to.</p>`}</div>
+  <div class="card">
+   ${chips("What kind of nursing would you like to explore?","First preferences (same as your interests in My Story)","profile.goals.interests",OPT.interests)}
+   ${chips("Any backup choices?","Alternate preferences","precep.alternates",OPT.interests.filter(x=>x!=="Not sure yet"))}
+   <label class="f"><span class="flabel">Status</span><select data-precep="status">${["Preferences only","Submitted to school","School approved","Placement confirmed"].map(s=>`<option ${s===p.status?"selected":""}>${s}</option>`).join("")}</select></label>
+   <p class="note">Preferences, school approval, and a confirmed placement are different things. A preference is not a promise of a specialty.</p></div>
+  <div class="card"><h2 style="margin-top:0">Statement of interest</h2>
+   <p class="note" style="margin-top:0">I'll start a draft from your story. Fill in the bracketed parts in your own words.</p>
+   ${p.statement&&p.stmtHash&&p.stmtHash!==FP.precep()?staleNote("Your interests or courses changed since this statement was drafted. Updating replaces it.","precepstmt"):""}
+   <button class="btn sec small" data-act="precepstmt">${p.statement?"Start over from my story":"Draft it for me"}</button>
+   ${field("","Statement of interest","precep.statement",{type:"textarea"})}
+   <h2>Questions to ask</h2>
+   <p class="note" style="margin-top:0">Tap any to add them to your list.</p>
+   ${quickAdd("Suggested questions","precep.questions",PRECEP_Q)}
+   ${field("","My questions","precep.questions",{type:"textarea"})}</div>
+  <div class="card"><h2 style="margin-top:0">Checklist</h2>${checks.map(([k,l])=>`<label class="check"><input type="checkbox" data-precepcheck="${k}" ${p.checks[k]?"checked":""}><span>${esc(l)}</span></label>`).join("")}
+   <div class="row"><a class="btn sec small" href="#create-resume">Update résumé</a><a class="btn sec small" href="#create-rec">Request a reference</a><a class="btn sec small" href="#story-accomplishments">Save an example</a></div></div>`;
+}
+
+/* ---------- Opportunities ---------- */
+const FAIR_SEED=Math.floor(Math.random()*1e9);
+function fairRank(id){let h=FAIR_SEED;for(const c of id)h=Math.imul(h^c.charCodeAt(0),2654435761)>>>0;return h}
+const OPP_TABS=[["all","All"],["next","What could I qualify for next?"],["jobs","Jobs"],["funding","Help paying for school"],["bls","BLS and ACLS classes"],["training","Other training"]];
+views.opps = (sub) => {
+  sub=sub||"all";
+  const tabs=`<div class="tabs" role="navigation" aria-label="Opportunity sections">${OPP_TABS.map(([k,l])=>`<a href="#opps-${k}" aria-current="${k===sub}">${l}</a>`).join("")}</div>`;
+  if(sub==="next") return `<h1>Opportunities</h1>${tabs}${viewNext()}`;
+  const free=!!state._freeOnly;
+  let list=DATA.resources;
+  if(sub==="jobs")list=list.filter(r=>r.cat==="job");
+  if(sub==="funding")list=list.filter(r=>r.cat==="funding");
+  if(sub==="bls")list=list.filter(r=>r.sub==="bls");
+  if(sub==="training")list=list.filter(r=>r.cat==="training"&&r.sub!=="bls");
+  if(free)list=list.filter(r=>["Free","Included with Simpson enrollment"].includes(r.cost)&&!(r.costItems||[]).some(i=>i.amount));
+  const over=list.filter(overBudget); if(!state._showOver)list=list.filter(r=>!overBudget(r));
+  list=list.map((r,i)=>({r,i,m:goalMatches(r).length,p:r.priority||5,pin:r.pin?0:1,f:r.sub==="bls"?fairRank(r.id):i})).sort((a,b)=>a.pin-b.pin||a.p-b.p||b.m-a.m||a.f-b.f||a.i-b.i).map(x=>x.r);
+  const intro = sub==="bls"?`<div class="card tint"><p style="margin-top:0"><b>Tell me whether you need your first class, a renewal, or help checking what your school or employer accepts.</b></p>
+    <p>Tell me whether Simpson or your employer has already arranged this training. You may not need to pay for another class.</p>
+    <p><b>Every provider gets an equal chance.</b> Classes are listed in a new random order each time you open WillHelp. No provider pays to be listed or to appear first. Any American Heart Association (AHA) authorized provider can issue a valid card, including ones not listed here. Use the AHA class search to see all of them.</p>
+    <p><b>Before you pay, ask two things:</b> does your school or employer require an AHA card (most local nursing programs and hospitals do), and does it accept a skills check done online or by a virtual instructor? Shasta College nursing, for example, says clinical facilities require hands-on practice and testing for renewals and won't accept online-only courses.</p>
+    <p class="note" style="margin:0">General CPR is not the same as healthcare-provider BLS. Skills-only sessions are not the same purchase as a full course. ACLS is listed for students who have a verified requirement or goal, not as something every critical care student should buy.</p></div>`
+   : sub==="funding"?`<div class="ctx">Help paying for school and help managing debt after school are different. Scholarships, grants, loans, reimbursement, forgiveness, and service-based repayment each work differently, and programs can't always be combined.</div>`:"";
+  return `<h1>Opportunities</h1><p class="lead">Simpson resources first, then Redding, then nearby. Each listing shows its source, status, and date checked.</p>${tabs}
+  <label class="check card" style="margin:.5rem 0"><input type="checkbox" data-act-change="freeonly" ${free?"checked":""}><span><b>Show only options with no known out-of-pocket cost</b><br><span class="note">Hides anything paid, conditional, or with unverified costs.</span></span></label>
+  ${intro}
+  ${over.length?`<div class="ctx">${state._showOver?`Showing ${over.length} option${over.length===1?"":"s"} over your training budget (${esc(state.profile.goals.budget)}).`:`${over.length} option${over.length===1?" is":"s are"} hidden because ${over.length===1?"it's":"they're"} over your training budget (${esc(state.profile.goals.budget)}).`} <button class="btn ghost small" data-act="toggleover">${state._showOver?"Hide them":"Show them"}</button></div>`:""}
+  ${(goalsList("jobTypes").length||goalsList("locations").length)?"":`<p class="note">Pick job types and locations in <a href="#story-goals">My Story</a> and matching options move to the top.</p>`}
+  ${list.length?list.map(oppCard).join(""):`<div class="card"><p style="margin:0">No verified options match right now. If no suitable free option is verified, I'll say so rather than guess.</p></div>`}
+  <p class="note">Every listing here was found on the organization's own site or a job posting on ${fmtDate("2026-11-16")}. "Unverified" means I haven't confirmed it's open today.</p>`;
+};
+function statusBadge(r){
+  const stale=isStale(r.verified);
+  const m={open:["Open","b-ok"],closed:["Closed","b-red"],unverified:["Status unverified","b-warn"],ongoing:["Ongoing resource","b-info"]}[r.status]||["Unknown","b-warn"];
+  return `<span class="badge ${m[1]}">${m[0]}</span> ${stale?`<span class="badge b-warn">Needs recheck</span>`:""}`;
+}
+function fitFor(r){
+  const have=heldKeys(); const out=[];
+  (r.required||[]).forEach(q=>{ if(!q.key) out.push(["unknown",q.label]); else if(q.key==="bls30") out.push([have.has("bls")?"met":"note",q.label+(have.has("bls")?"":": you haven't reported BLS yet, and this posting allows 30 days after hire")]); else out.push([have.has(q.key)?"met":"missing",q.label]); });
+  return out;
+}
+function oppCard(r){
+  const fit=fitFor(r); const saved=state.apps.some(a=>a.resId===r.id);
+  const known=(r.costItems||[]).filter(i=>i.amount&&i.confirmed).reduce((s,i)=>s+i.amount,0);
+  const costHTML=(r.costItems&&r.costItems.length)?`<ul style="margin:.2rem 0 .2rem 1.1rem;padding:0">${r.costItems.map(i=>`<li>${esc(i.label)}: ${i.confirmed&&i.amount?"$"+i.amount:"Price not verified. Check with the provider."}</li>`).join("")}</ul><div><b>Known total:</b> ${known?"$"+known:"none confirmed"}. Not an all-inclusive price.</div>`:"";
+  const gm=goalMatches(r), gw=goalWarnings(r);
+  const req=fit.filter(([s])=>s==="met"||s==="missing"||s==="unknown"), met=req.filter(([s])=>s==="met").length, miss=req.filter(([s])=>s==="missing");
+  const quick=[r.location,r.pay&&r.cat!=="funding"?r.pay:"",r.cat==="funding"&&r.pay?"Award: "+r.pay:"",r.schedule&&r.schedule!=="See provider"?r.schedule:"",r.deadline&&!/^(n\/a|See provider|Rolling)$/i.test(r.deadline)?"Deadline: "+r.deadline:""].filter(Boolean).filter(x=>!/not listed|not published|^varies$/i.test(x.replace(/^(Deadline|Award): /,"")));
+  const fitLine=req.length?(miss.length?`Not reported yet: ${esc(miss[0][1])}${miss.length>1?` and ${miss.length-1} more`:""}`:`You've reported ${met} of ${req.length} listed requirement${req.length===1?"":"s"}`):"";
+  return `<article class="card opp">${gm.map(x=>`<span class="match">${esc(x)}</span>`).join("")}<div class="row" style="justify-content:space-between"><div><h3>${esc(r.title)}</h3><div class="note">${esc(r.org)}</div></div><div>${statusBadge(r)}</div></div>
+  <p class="quick">${quick.map(esc).join(" · ")}</p>
+  ${r.phone?`<p class="quick"><a href="tel:${esc(r.phone.replace(/[^\d]/g,""))}">Call ${esc(r.phone)}</a></p>`:""}
+  ${fitLine?`<p class="fitline">${fitLine}</p>`:""}
+  ${gw.map(x=>`<p class="note" style="margin:.2rem 0">${esc(x)}</p>`).join("")}
+  <details class="more"><summary>Details, requirements, and source</summary>
+  <dl class="kv">
+   <dt>Location</dt><dd>${esc(r.location)}</dd>
+   ${r.phone?`<dt>Phone</dt><dd><a href="tel:${esc(r.phone.replace(/[^\d]/g,""))}">${esc(r.phone)}</a></dd>`:""}
+   <dt>Cost</dt><dd><span class="badge b-info">${r.cat==="job"||r.cat==="funding"?"No cost to apply":esc(r.cost)}</span>${costHTML}</dd>
+   ${r.pay?`<dt>${r.cat==="funding"?"Award":"Published pay"}</dt><dd>${esc(r.pay)}</dd>`:""}
+   ${r.schedule?`<dt>Schedule</dt><dd>${esc(r.schedule)}</dd>`:""}
+   ${r.deadline?`<dt>Deadline</dt><dd>${esc(r.deadline)}</dd>`:""}
+   ${r.courseType?`<dt>Course</dt><dd>${esc(r.courseType)}</dd><dt>Format</dt><dd>${esc(r.format)}</dd><dt>Card issuer</dt><dd>${esc(r.issuer)}</dd><dt>Included</dt><dd>${esc(r.includes)}</dd><dt>Accepted by Simpson or employer?</dt><dd>Not confirmed. Ask before paying.</dd>`:""}
+   ${(r.required||[]).length?`<dt>Required</dt><dd>${r.required.map(q=>esc(q.label)).join("; ")}</dd>`:""}
+   ${(r.preferred||[]).length?`<dt>Preferred</dt><dd>${r.preferred.map(q=>esc(q.label)).join("; ")}</dd>`:""}
+   ${r.obligations?`<dt>Obligations</dt><dd>${esc(r.obligations)}</dd>`:""}
+   <dt>Source</dt><dd>${r.source?`<a href="${esc(r.source)}" target="_blank" rel="noopener">${esc(r.sourceName)}</a>`:esc(r.sourceName)}, checked ${fmtDate(r.verified)}</dd>
+  </dl>
+  ${fit.length?`<div class="card" style="background:#fbfaf9;margin:.5rem 0"><b>Potential fit</b><ul style="margin:.3rem 0 .3rem 1.1rem;padding:0">${fit.map(([s,l])=>`<li>${s==="met"?"You've reported: ":s==="missing"?"Not reported yet: ":s==="unknown"?"Unknown, check with the organization: ":""}${esc(l)}</li>`).join("")}</ul>
+   ${gw.map(x=>`<div class="note" style="margin-top:.3rem">${esc(x)}</div>`).join("")}
+   <div class="note">Possible fit based on what you've shared. Confirm current requirements.</div></div>`:(gw.length?`<div class="card" style="background:#fbfaf9;margin:.5rem 0">${gw.map(x=>`<div class="note">${esc(x)}</div>`).join("")}</div>`:"")}
+  ${r.fitNote?`<p class="note">${esc(r.fitNote)}</p>`:""}
+  <button class="btn ghost small" data-act="report" data-id="${r.id}">Report outdated information</button></details>
+  <div class="row">${r.source?`<a class="btn small" href="${esc(r.source)}" target="_blank" rel="noopener">Official page</a>`:""}
+   <button class="btn sec small" data-act="saveopp" data-id="${r.id}" ${saved?"disabled":""}>${saved?"Saved to tracker":"Save to tracker"}</button>
+</div></article>`;
+}
+function viewNext(){
+  const have=heldKeys();
+  const grouped={now:[],train:[],later:[],unknown:[]};
+  DATA.roles.forEach(r=>{
+    if(!r.verified){grouped.unknown.push(r);return}
+    if(r.later){grouped.later.push(r);return}
+    const missing=r.req.filter(q=>q.key&&q.key!=="bls30"&&!have.has(q.key));
+    (missing.length?grouped.train:grouped.now).push(r);
+  });
+  const roleCard=r=>{
+    const present=r.req.filter(q=>q.key&&have.has(q.key)).map(q=>q.label);
+    const missing=r.req.filter(q=>q.key&&q.key!=="bls30"&&!have.has(q.key)).map(q=>q.label);
+    const unknown=r.req.filter(q=>!q.key||q.key==="bls30").map(q=>q.label);
+    const app=r.apply?DATA.resources.find(x=>x.id===r.apply):null;
+    return `<div class="card">${r.jobType&&goalsList("jobTypes").includes(r.jobType)?`<span class="match">A job type you picked</span>`:""}<h3>${esc(r.name)}</h3><dl class="kv">
+     <dt>Already reported</dt><dd>${present.length?esc(present.join("; ")):"Nothing matching yet"}</dd>
+     <dt>Employer or state requires</dt><dd>${r.req.length?esc(r.req.map(q=>q.label).join("; ")):"Not yet verified"}</dd>
+     ${missing.length?`<dt>Missing</dt><dd>${esc(missing.join("; "))}</dd>`:""}
+     ${unknown.length?`<dt>Check</dt><dd>${esc(unknown.join("; "))}</dd>`:""}
+     ${r.training?`<dt>Training needed</dt><dd>${esc(r.training)}</dd>`:""}
+     <dt>Who verifies</dt><dd>${esc(r.verify)}</dd>
+     <dt>Based on</dt><dd>${esc(r.source)}</dd></dl>
+     <div class="row">${app?`<a class="btn small sec" href="#opps-all" data-act="go" data-to="#opps-${app.cat==="job"?"jobs":"all"}">See listing</a>`:""}${r.link?`<a class="btn small sec" href="${r.link}">Open guide</a>`:""}${r.url?`<a class="btn small sec" href="${esc(r.url)}" target="_blank" rel="noopener">Official guidance</a>`:""}</div></div>`;
+  };
+  const sec=(t,arr,empty)=>`<h2>${t}</h2>${arr.length?arr.map(roleCard).join(""):`<p class="note">${empty}</p>`}`;
+  return `<p class="lead">Grouped by what you've reported. Similar job titles can have different requirements, so each one is checked separately.</p>
+   <div class="ctx">Possible fit based on what you've shared. Confirm current requirements with the employer.</div>
+   ${sec("1. Explore applying now",grouped.now,"Nothing yet based on what you've shared.")}
+   ${sec("2. Employer training available",[], "No employer-trained openings are verified right now. I only list these when an employer explicitly offers training.")}
+   ${sec("3. Additional training or certification needed",grouped.train,"None.")}
+   ${sec("4. Prepare for later",grouped.later,"None.")}
+   <h2>Requirements not yet researched</h2><p class="note">These roles are on the list, but their local requirements haven't been verified yet. Check each posting directly.</p>
+   <div class="card">${grouped.unknown.map(r=>`<div class="list-item"><b>${esc(r.name)}</b> <span class="note">${esc(r.source)}</span></div>`).join("")}</div>
+   <div class="card"><h3>Before paying for more training</h3><p class="note" style="margin:0">Compare the total cost, time, time until you could work, clinical placement needs, how long until RN graduation, available shifts, commute, published pay, and any repayment obligations. Paid work or employer-supported training usually beats collecting credentials.</p></div>`;
+}
+
+/* ---------- Tracker ---------- */
+views.apps = () => `<h1>My applications</h1><p class="lead">Saved, preparing, applied, interview, offer, closed. Add deadlines and notes.</p>
+  <button class="btn sec" data-act="addapp">Add one manually</button>
+  ${state.apps.length?state.apps.map((a,i)=>`<div class="card">${choice("","Opportunity",`apps.${i}.title`,[...new Set(DATA.resources.map(r=>`${r.title} (${r.org})`).concat(state.apps.map(x=>x.title).filter(Boolean)))],{optional:false,fix:"first"})}
+   <div class="grid" style="grid-template-columns:1fr 1fr"><label class="f"><span class="flabel">Status</span><select data-app="${i}" data-k="status">${APP_STATUSES.map(s=>`<option ${s===a.status?"selected":""}>${s}</option>`).join("")}</select></label>
+   <label class="f"><span class="flabel">Deadline</span><input type="date" data-app="${i}" data-k="deadline" value="${esc(a.deadline||"")}"></label></div>
+   <label class="f"><span class="flabel">Follow-up date</span><input type="date" data-app="${i}" data-k="followup" value="${esc(a.followup||"")}"></label>
+   ${field("","Notes",`apps.${i}.notes`,{type:"textarea"})}${quickAdd("Quick notes",`apps.${i}.notes`,APP_NOTES)}
+   <button class="btn ghost small" data-act="rmapp" data-i="${i}">Remove</button></div>`).join(""):`<div class="card"><p style="margin:0">Nothing here yet. Save something from Opportunities, or add one manually.</p></div>`}`;
+
+/* ---------- Support ---------- */
+views.support = () => {
+  const groups=[...new Set(DATA.support.map(s=>s.group))];
+  return `<h1>Support</h1><p class="lead">I need help today. You don't have to explain anything to browse.</p>
+  <div class="warnbox"><b>WillHelp is not an emergency service and nobody monitors it.</b> In an emergency call 911. For a mental health crisis, call or text 988.</div>
+  <nav class="pill-row" aria-label="Jump to a kind of help" style="margin:.6rem 0 0">${groups.map((g,i)=>`<button type="button" class="pill" data-act="jumpto" data-to="sg${i}">${esc(g)}</button>`).join("")}</nav>
+  ${groups.map((g,gi)=>`<h2 id="sg${gi}" tabindex="-1" style="scroll-margin-top:96px">${esc(g)}</h2>`+DATA.support.filter(s=>s.group===g).map(s=>`<div class="card"><h3>${esc(s.name)}</h3><p>${esc(s.detail)}</p>${s.items?`<ul class="sup-list">${s.items.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}${s.note?`<p class="note">${esc(s.note)}</p>`:""}
+   <div class="row">${s.phone?`<a class="btn small" href="tel:${esc(s.phone.replace(/[^0-9+]/g,""))}">Call ${esc(s.phone)}</a>`:""}${s.email?`<a class="btn small sec" href="mailto:${esc(s.email)}">Email ${esc(s.email)}</a>`:""}${s.url?`<a class="btn small sec" href="${esc(s.url)}" target="_blank" rel="noopener">Source</a>`:""}</div>
+   <p class="note">${s.cost?esc(s.cost)+". ":""}Checked ${fmtDate(s.verified)}${isStale(s.verified)?' <span class="badge b-warn">Needs recheck</span>':""}</p></div>`).join("")).join("")}
+  <p class="note">Simpson's handbook didn't list a campus food pantry or emergency aid fund. If one exists, an administrator can add it.</p>`;
+};
+
+/* ---------- About ---------- */
+views.about = () => `<h1>About WillHelp</h1>
+  <div class="card"><p style="margin-top:0">Built for Simpson University nursing students in Redding, California. WillHelp prioritizes local resources, California requirements, and opportunities relevant to your stage of nursing school.</p>
+  <p>WillHelp is an independent resource designed to support Simpson University nursing students. It is not an official university service and is not endorsed by Simpson University unless expressly stated.</p>
+  <p>WillHelp is inspired by Will Gendron, a nursing instructor. The guidance here is automated. It is not a live conversation with Will, and Will has not personally reviewed, approved, or received anything you enter.</p></div>
+  ${tourCTA()}
+  <h2>Guidance disclaimer</h2><div class="card note" style="color:var(--ink2)">
+  <p style="margin-top:0">WillHelp provides general educational and career-planning assistance to help you explore possible next steps. Its suggestions are optional guidance, not legal advice, an official eligibility determination, or a directive from Simpson University, an employer, a training provider, or a government agency. Any requirements described come from the identified organization, not from WillHelp.</p>
+  <p>Requirements, prices, funding, job openings, deadlines, and program availability can change at any time, including from day to day. Information may become outdated between checks. Before paying, enrolling, applying, or relying on an eligibility statement, confirm the current details directly with the responsible school, employer, training provider, or California agency.</p>
+  <p style="margin-bottom:0">Completing a course or using WillHelp does not guarantee certification, licensure, admission, clinical placement, employment, funding, or loan forgiveness. Your circumstances may affect which opportunities are available to you. WillHelp does not replace official school advising, regulatory decisions, or advice from a qualified professional when needed.</p></div>
+  <h2>Privacy</h2><div class="card"><p style="margin-top:0">Your information stays in this browser on this device. There's no account, no server, and no AI service in this version. Clearing your browser data or switching devices starts you over.</p>
+   <p class="note">Please never enter Social Security numbers, bank logins, patient information, or background check details.</p>
+   <div class="row">${sharedMode()?`<button class="btn sec small" data-act="sharedoff">This is my own device</button>`:`<button class="btn sec small" data-act="sharedon">Shared computer: clear my information when I close the browser</button>`}<button class="btn sec small" data-act="delete-all">Delete everything</button></div></div>
+  <p class="note">Content version ${esc(DATA.dataVersion)}. Records older than ${DATA.reviewDays} days are flagged "Needs recheck." Nothing checks sources automatically.</p>`;
+
+/* ------------------------- guided tour (read-only) -------------------------
+   Willa is fictional. The tour swaps her in only while drawing a preview,
+   and save() is disabled while touring, so the student's own data is never touched. */
+function tourState(){
+  const s=blankState(); s.onboarded=true; s.lastExport=new Date().toISOString().slice(0,10);
+  Object.assign(s.profile.about,{preferredName:"Willa",email:"willa@example.com",phone:"555-0100",city:"Redding, CA"});
+  Object.assign(s.profile.education,{school:"Simpson University",program:"Bachelor of Science in Nursing (BSN)",enrolledConfirmed:true,fullTime:true,expectedGrad:"2028-05-06"});
+  ["PREREQ","NURS 2310","NURS 2320","NURS 2330","NURS 2340"].forEach(c=>s.profile.education.courses[c]={status:"completed"});
+  ["NURS 3310","NURS 3320","NURS 3330","NURS 3340"].forEach(c=>s.profile.education.courses[c]={status:"in_progress"});
+  s.profile.education.courses["NURS 2310"].clinical=true;
+  s.profile.experience=[{id:"t1",type:"employment",title:"Barista",org:"Downtown coffee shop",location:"Redding, CA",start:"2023",end:"Present",bullets:"Trained four new hires on opening procedures\nKept orders moving during the morning rush on a two-person shift"},
+    {id:"t2",type:"caregiving",title:"Family caregiver",org:"",location:"",start:"2021",end:"2023",bullets:"Helped my grandmother with meals, getting around the house, and medication reminders"}];
+  s.profile.credentials=[{id:"t3",key:"bls",name:"BLS Provider",issuer:"American Heart Association",expires:new Date(TODAY.getTime()+40*864e5).toISOString().slice(0,10),kind:"held"}];
+  s.profile.skills=[{id:"t4",name:"Vital signs",kind:"supervised"},{id:"t5",name:"Sterile technique",kind:"classroom"}];
+  s.profile.accomplishments=[{id:"t6",type:"Teamwork",title:"Covered a coworker's shifts during finals",detail:"Swapped schedules so a teammate could study, and we both kept our hours."}];
+  return s;
+}
+function withTour(fn){const real=state;state=tourState();touring=true;try{return fn()}finally{state=real;touring=false}}
+function tourCTA(){return `<a class="tour-cta" href="#tour-1"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span><span class="txt"><b>Take the 2-minute tour</b><span>Follow a made-up second-semester student. Nothing to fill out.</span></span><span class="go" aria-hidden="true">Start</span></a>`}
+function preview(html){return `<div class="tour-preview" inert aria-hidden="true">${html}</div>`}
+const res=id=>DATA.resources.find(r=>r.id===id);
+const TOUR=[
+  {title:"Meet Willa", lead:"Willa is a made-up student in her second semester of Simpson's nursing program. Follow along to see what WillHelp would do for someone at her stage. You don't have to type anything.",
+   why:"Everything Willa \"tells\" WillHelp is the kind of thing you'd add once, in My Story. After that, every tool reuses it.",
+   show:()=>{const E=state.profile.education;const nick=st=>DATA.curriculum.courses.filter(c=>E.courses[c.code]?.status===st&&c.code!=="PREREQ").map(c=>c.nick).join(", ");
+     return `<dl class="kv"><dt>Finished</dt><dd>${esc(nick("completed"))}</dd><dt>This semester</dt><dd>${esc(nick("in_progress"))}</dd><dt>Work</dt><dd>Part-time barista; helped care for her grandmother</dd><dt>Credentials</dt><dd>BLS card, expires in about 40 days</dd><dt>Goal right now</dt><dd>A healthcare job that fits around school</dd></dl>`}},
+  {title:"Home shows her next steps", lead:"Because Willa finished Foundations and is now in Adult I, Home picks out what matters for her right now. At most three at a time.",
+   why:"These come from rules tied to Simpson's course sequence, not guesses. Her BLS card expiring shows up because she added the date. If a step doesn't fit, she can hide it.",
+   show:()=>nextSteps().slice(0,3).map(stepCard).join("")},
+  {title:"My Nursing Journey keeps her place", lead:"Willa tapped the stage closest to hers. WillHelp proposed her courses from Simpson's published plan, and she can change any of them.",
+   why:"Transferred in, repeating a course, took a leave, or part-time? You set each course to what's true. This isn't a transcript or a degree audit.",
+   show:()=>{const E=state.profile.education;const lab={completed:"Completed",in_progress:"In progress"};return DATA.curriculum.courses.filter(c=>["y2s2","y3s1"].includes(DATA.curriculum.courses.find(x=>x.code===c.code).term)).map(c=>`<div class="course"><div><b>${esc(c.nick)}</b> <span class="note">${esc(c.code)}</span></div><span class="badge ${E.courses[c.code]?.status==="completed"?"b-ok":"b-info"}">${lab[E.courses[c.code]?.status]||""}</span></div>`).join("")}},
+  {title:"A résumé from what she already shared", lead:"Willa picked \"Patient care technician\" and got a draft in one tap. Her barista job and caregiving show up because she added them once.",
+   why:"Her Foundations clinical is labeled as supervised student experience, never as a job. The yellow blanks are things only she can write, like her clinical site and a short summary. WillHelp never fills those in for her.",
+   show:()=>`<div class="doc">${buildResumeHTML({target:"Patient care technician",excludes:[],includeClassroom:[]})}</div>`},
+  {title:"A possible path to CNA certification", lead:"Finishing Foundations can open the California CDPH equivalency path toward a CNA certificate. WillHelp gives Willa a checklist, a tracker, and a draft letter asking Simpson for the documentation.",
+   why:"This is a path to apply, not automatic certification. CDPH reviews the application and there's still a competency exam. WillHelp never marks anyone certified.",
+   show:()=>`<div class="status-track">${CNA_STEPS.map((x,i)=>`<span class="${i===0?"cur":""}">${esc(x)}</span>`).join("")}</div><p class="note">Willa is at "Exploring." She moves the tracker herself as each step happens.</p>`},
+  {title:"Jobs she might fit now", lead:"Mercy Redding hires Unit Aides, and one posting says first-year RN coursework can count. Willa already reported BLS, so WillHelp shows it as a possible fit.",
+   why:"\"Potential fit\" only compares what you've told WillHelp with what the employer published. Always confirm on the employer's site. Listings show when they were last checked.",
+   show:()=>oppCard(res("mercy-ua"))},
+  {title:"Her BLS card is expiring", lead:"WillHelp lists Redding BLS classes, but first asks a question: has Simpson or her employer already arranged this?",
+   why:"Free options come first. Prices only appear after they've been confirmed with the provider, and a partial price is never shown as the full cost.",
+   show:()=>oppCard(res("sts"))},
+  {title:"Help paying for school", lead:"Willa can see scholarships with real requirements and obligations, like HCAI's BSN scholarship and its one-year service commitment.",
+   why:"Scholarships, loans, and repayment programs work differently, and some can't be combined. Closed programs say when to watch for the next cycle.",
+   show:()=>oppCard(res("bsnsp"))},
+  {title:"Asking for a recommendation", lead:"When Willa applies for that scholarship, she can put together a clear request for a faculty member: the deadline, how to submit, and reminders of what she's done.",
+   why:"The message is in Willa's voice. WillHelp never writes as the recommender, signs anything, or claims an endorsement. Willa sends it herself.",
+   show:()=>{state._rec={recommender:"Professor Example",relationship:"my clinical instructor in Foundations",opportunity:"the HCAI Bachelor of Science Nursing Scholarship",deadline:"",instructions:"Please upload it through the online application portal (I'll send the link)",acc:["t6"],docs:[],message:""};genRec();return `<div class="doc" style="white-space:pre-wrap;font-family:inherit">${esc(state._rec.message)}</div>`}},
+  {title:"Support, no explanation needed", lead:"Tutoring, counseling, accommodations, food, and child care help are all one tap away. Willa doesn't have to share anything to look.",
+   why:"WillHelp is not an emergency service and nobody monitors it. In an emergency, call 911. For a crisis, call or text 988.",
+   show:()=>DATA.support.filter(x=>["ssc","counsel","foodbank"].includes(x.id)).map(x=>`<div class="card"><h3>${esc(x.name)}</h3><p>${esc(x.detail)}</p>${x.phone?`<p class="note">${esc(x.phone)}</p>`:""}</div>`).join("")},
+  {title:"Your turn", lead:"That's the tour. Start with whatever you need today. Share as much or as little as you want; you can add more anytime.",
+   why:"Your information stays in this browser on this device. Nothing is sent anywhere.",
+   show:null}
+];
+views.tour=(sub)=>{
+  const n=TOUR.length; const i=Math.min(n-1,Math.max(0,(parseInt(sub,10)||1)-1)); const t=TOUR[i];
+  const body=t.show?withTour(t.show):"";
+  const last=i===n-1;
+  return `<p class="note" style="margin:.2rem 0">Tour, step ${i+1} of ${n}</p>
+  <div class="dots" aria-hidden="true">${TOUR.map((_,k)=>`<span class="${k<=i?"on":""}"></span>`).join("")}</div>
+  <h1>${esc(t.title)}</h1><p class="lead">${esc(t.lead)}</p>
+  ${body?preview(body):""}
+  <div class="tour-why">${esc(t.why)}</div>
+  ${last?`<div class="actions"><a class="bigbtn" href="#journey" data-act="onboarded">Tell me where I am in school<span>Set your courses in a minute</span></a><a class="bigbtn" href="#create-resume" data-act="onboarded">Build my résumé<span>Start with just your name</span></a><a class="bigbtn" href="#home" data-act="onboarded">Go to Home<span>Look around first</span></a></div>`:""}
+  <div class="tour-nav">${i>0?`<a class="btn sec" href="#tour-${i}">Back</a>`:`<span></span>`}
+   ${last?"":`<a class="btn" href="#tour-${i+2}">Next</a>`}</div>
+  <p style="text-align:center"><a class="btn ghost small" href="#home">Exit tour</a></p>`;
+};
+
+/* ------------------------- router ------------------------- */
+function render(){
+  const h=location.hash.replace(/^#\/?/,"")||"home";
+  const i=h.indexOf("-");const view=i<0?h:h.slice(0,i), sub=i<0?"":h.slice(i+1);
+  if(view==="admin"){location.replace("#home");return}
+  const fn=views[view]||views.home;
+  document.documentElement.style.setProperty("--scale",state.textScale||1);
+  $("#demoBanner").innerHTML=(sharedMode()?`<div class="demo-banner" role="note"><b>Shared computer mode.</b> Your information clears when you close this browser. <button class="btn small sec" data-act="delete-all">Clear now</button></div>`:"");
+  $("#main").innerHTML=fn(sub)+`<footer class="foot">WillHelp is an independent resource designed to support Simpson University nursing students. It is not an official university service and is not endorsed by Simpson University unless expressly stated. Automated guidance, not a conversation with Will. <a href="#about">Disclaimer and privacy</a></footer>`;
+  const navKey={journey:"home",apps:"home",tour:"home",about:""}[view]??view;
+  document.querySelectorAll("nav.main a").forEach(a=>{if(a.dataset.nav===navKey)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
+  document.title=`WillHelp: ${({home:"Home",story:"My Story",create:"Create",opps:"Opportunities",support:"Support",journey:"My Nursing Journey",tour:"Tour",apps:"Applications",about:"About"})[view]||"Home"}`;
+}
+window.addEventListener("hashchange",()=>{state._editing=false;document.querySelectorAll(".toast").forEach(x=>x.remove());render();const m=$("#main");m.focus({preventScroll:true});window.scrollTo(0,0)});
+
+/* ------------------------- events ------------------------- */
+let saveTimer;
+document.addEventListener("input",e=>{
+  const t=e.target;
+  if(t.dataset.bind){
+    if(t.dataset.bind==="_newTarget"){state._newTarget=t.value;return}
+    setP(state,t.dataset.bind,t.type==="checkbox"?t.checked:t.value);
+    {const mk=t.dataset.bind.match(/^profile\.credentials\.(\d+)\.key$/);if(mk){const c=state.profile.credentials[+mk[1]];const k=CRED_KEYS.find(x=>x.key===t.value);if(c&&k&&k.key!=="other"&&!c.name){c.name=k.label.replace(/ \(.*\)$/,"");if(k.key==="bls"&&!c.issuer)c.issuer="American Heart Association";save();render();return}}}
+    if(/^profile\.experience\.\d+\.type$/.test(t.dataset.bind)){save();render();return}
+    if(t.dataset.bind==="profile.education.enrolledConfirmed"&&t.checked){const E=state.profile.education;if(!E.school)E.school="Simpson University";if(!E.program)E.program="BSN (pre-licensure)"}
+    clearTimeout(saveTimer);saveTimer=setTimeout(save,250);
+    if(t.tagName==="SELECT"||t.type==="checkbox"||t.type==="date")save();
+  }
+  else if(t.dataset.rec!==undefined){state._rec[t.dataset.rec]=t.value;if(t.dataset.rec==="message")state._rec.edited=true;save()}
+  else if(t.dataset.app!==undefined){state.apps[+t.dataset.app][t.dataset.k]=t.value;save()}
+  else if(t.dataset.precep){state.precep[t.dataset.precep]=t.value;save()}
+  else if(t.hasAttribute("data-cnaletter")){state.cna.letter=t.value;save()}
+  else if(t.dataset.coursefield){const c=state.profile.education.courses[t.dataset.coursefield]||(state.profile.education.courses[t.dataset.coursefield]={});c[t.dataset.k]=t.type==="checkbox"?t.checked:t.value;save()}
+});
+document.addEventListener("change",e=>{
+  const t=e.target;
+  if(t.dataset.fix&&t.dataset.fix!=="none"&&(t.tagName==="TEXTAREA"||t.type==="text")){
+    const r=fixText(t.value,t.dataset.fix);
+    if(r.text!==t.value){t.value=r.text;t.dispatchEvent(new Event("input",{bubbles:true}));toast("Fixed "+r.changes.slice(0,3).join(", ")+". Change it back if I got it wrong.")}
+  }
+  if(t.dataset.bind&&/^docs\.\d+\.summary$/.test(t.dataset.bind)){const d=currentDraft();if(d)d.customHtml=null;save();render();return}
+  if(t.dataset.bind&&/^profile\.experience\.\d+\.(bullets|org)$/.test(t.dataset.bind)){save();setTimeout(()=>{const id=document.activeElement&&document.activeElement.id;render();if(id){const el=document.getElementById(id);if(el)el.focus({preventScroll:true})}},0)}
+  if(t.dataset.rerender){save();render();return}
+  if(t.type==="email"&&t.value){const v=t.value.trim().toLowerCase(),m=v.match(/@(.+)$/);const TY={"gmial.com":"gmail.com","gmal.com":"gmail.com","gmai.com":"gmail.com","gmail.co":"gmail.com","gnail.com":"gmail.com","gamil.com":"gmail.com","yaho.com":"yahoo.com","yahooo.com":"yahoo.com","yahoo.co":"yahoo.com","hotmial.com":"hotmail.com","hotmai.com":"hotmail.com","outlok.com":"outlook.com","outloo.com":"outlook.com","icoud.com":"icloud.com","iclod.com":"icloud.com","simpsonu.ed":"simpsonu.edu","simpson.edu":"simpsonu.edu","simpsonu.com":"simpsonu.edu"};
+    if(m&&TY[m[1]]){const nv=v.replace(/@.+$/,"@"+TY[m[1]]);t.value=nv;if(t.dataset.bind){setP(state,t.dataset.bind,nv);save()}toast(`Changed ${m[1]} to ${TY[m[1]]}. Change it back if I got it wrong.`)}
+    else if(v!==t.value&&t.dataset.bind){t.value=v;setP(state,t.dataset.bind,v);save()}}
+  if(t.type==="tel"&&t.value){const d=t.value.replace(/\D/g,"").replace(/^1(?=\d{10}$)/,"");if(d.length===10){const nv=`(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}`;if(nv!==t.value){t.value=nv;if(t.dataset.bind){setP(state,t.dataset.bind,nv);save()}}}}
+  if(t.dataset.choice){const path=t.dataset.choice;if(t.value==="__other"){state._other=path;setP(state,path,"");save();render();const inp=document.querySelector(`input[data-bind="${path}"]`);if(inp)inp.focus();return}state._other=null;setP(state,path,t.value);if(/credentials\.\d+\.issuer$/.test(path)){}save();render();return}
+  if(t.dataset.my){const path=t.dataset.my;const cur=(getP(state,path)||"");let [m,y]=cur==="Present"?["Present",""]:cur.split(" ");if(t.dataset.part==="m")m=t.value;else y=t.value;const v=m==="Present"?"Present":[m||"",y||""].join(" ").trim();setP(state,path,v);save();render();return}
+  if(t.dataset.course){const c=state.profile.education.courses[t.dataset.course]||(state.profile.education.courses[t.dataset.course]={});c.status=t.value;c.reported="student";save();render();toast("Updated. Next steps refreshed.")}
+  else if(t.dataset.incl){const d=currentDraft();if(!d)return;if(d.customHtml){t.checked=!t.checked;toast("This would replace your edited wording. Tap Update from my story first, then change what the draft uses.");return}const id=t.dataset.incl;if(t.dataset.defoff==="1"){d.includeClassroom=d.includeClassroom||[];d.includeClassroom=t.checked?[...d.includeClassroom,id]:d.includeClassroom.filter(x=>x!==id)}else{d.excludes=d.excludes||[];d.excludes=t.checked?d.excludes.filter(x=>x!==id):[...d.excludes,id]}d.customHtml=null;d.updatedAt=new Date().toISOString().slice(0,10);save();render()}
+  else if(t.dataset.recacc){const r=state._rec;r.acc=t.checked?[...r.acc,t.dataset.recacc]:r.acc.filter(x=>x!==t.dataset.recacc)}
+  else if(t.dataset.recdoc){const r=state._rec;r.docs=t.checked?[...r.docs,t.dataset.recdoc]:r.docs.filter(x=>x!==t.dataset.recdoc)}
+  else if(t.hasAttribute("data-cnastep")){state.cna.step=+t.value;save();render()}
+  else if(t.dataset.cnacheck){state.cna.checks[t.dataset.cnacheck]=t.checked;save()}
+  else if(t.dataset.precepcheck){state.precep.checks[t.dataset.precepcheck]=t.checked;save()}
+  else if(t.dataset.actChange==="licdone"){const id=t.dataset.id;if(t.checked)state.license.done[id]=new Date().toISOString().slice(0,10);else delete state.license.done[id];save();render()}
+  else if(t.dataset.actChange==="freeonly"){state._freeOnly=t.checked;render()}
+  else if(t.dataset.actChange==="import"){const f=t.files[0];if(!f)return;f.text().then(txt=>{try{const o=JSON.parse(txt);if(!o||!o.profile)throw 0;state=deepMerge(blankState(),o);save();render();toast("Backup imported.")}catch(_){toast("That file isn't a WillHelp backup.")}})}
+});
+document.addEventListener("click",e=>{
+  if(e.target.closest(".skip")){e.preventDefault();$("#main").focus();return}
+  const b=e.target.closest("[data-act]");if(!b)return;
+  const a=b.dataset.act;
+  const acts={
+    go(){location.hash=b.dataset.to},
+    textsize(){const s=[1,1.15,1.3];const i=s.indexOf(state.textScale||1);state.textScale=s[(i+1)%s.length];save();render();toast(`Text size ${Math.round(state.textScale*100)}%`)},
+    chip(){const path=b.dataset.path,v=b.dataset.val;const list=(getP(state,path)||"").split(", ").filter(Boolean);const i=list.indexOf(v);if(i>=0)list.splice(i,1);else list.push(v);setP(state,path,list.join(", "));save();b.setAttribute("aria-pressed",String(i<0))},
+    quickadd(){const path=b.dataset.path;const cur=(getP(state,path)||"").trim();setP(state,path,(cur?cur+"\n":"")+b.dataset.val);save();render()},
+    addbullet(){const ex=state.profile.experience[+b.dataset.i];const cur=(ex.bullets||"").trim();ex.bullets=(cur?cur+"\n":"")+b.dataset.text;save();render();toast("Added. Edit it if it needs to match what you did.")},
+    usepolish(){const ex=state.profile.experience[+b.dataset.i];const lines=(ex.bullets||"").split("\n").map(x=>x.trim()).filter(Boolean);lines[+b.dataset.j]=b.dataset.text;ex.bullets=lines.join("\n");save();render()},
+    addskill(){const v=b.dataset.val;const sk=state.profile.skills;const i=sk.findIndex(x=>(x.name||"").toLowerCase()===v.toLowerCase());if(i>=0)sk.splice(i,1);else sk.push({id:uid(),name:v,kind:b.dataset.group.startsWith("Clinical")?"classroom":"held"});save();render()},
+    usesummary(){const d=currentDraft();if(!d)return;d.summary=b.dataset.text;d.customHtml=null;d.storyHash=FP.resume();save();render();toast("Summary added. Change any words you like.")},
+    starter(){const path=b.dataset.path;const cur=(getP(state,path)||"").trimEnd();setP(state,path,(cur?(/[.!?]$/.test(cur)?cur+" ":cur+(cur.endsWith("\n")?"":" ")):"")+b.dataset.text);save();render();const ta=document.querySelector(`textarea[data-bind="${path}"]`);if(ta){ta.focus();ta.setSelectionRange(ta.value.length,ta.value.length)}},
+    precepstmt(){const p=state.precep,P=state.profile,E=P.education;if(p.statement&&p.stmtHash===FP.precep()&&!confirmTap("precepstmt","This replaces your statement."))return;
+      const first=goalsList("interests").filter(x=>x!=="Not sure yet"),alt=(p.alternates||"").split(", ").filter(Boolean);
+      const clin=DATA.curriculum.courses.filter(c=>{const cc=E.courses[c.code];return cc&&cc.clinical&&active(c.code)}).map(c=>c.nick);
+      p.statement=`I'm a ${E.program||"BSN"} student at ${E.school||"Simpson University"}, and I'd like to complete my preceptorship in ${first.length?first.join(" or ").toLowerCase():"[the area you're most drawn to]"}${alt.length?`. My alternate choices are ${alt.join(" and ").toLowerCase()}`:""}.
+
+${clin.length?`My clinical experience so far includes ${clin.join(", ")}. `:""}[One short example from clinical or simulation that shows why this area fits you. No patient details.]
+
+During my preceptorship I want to build confidence in [one or two skills you want to grow] and learn how an experienced nurse [what you want to learn from your preceptor]. Thank you for considering my preferences.`;p.stmtHash=FP.precep();save();render()},
+    toggleover(){state._showOver=!state._showOver;render()},
+    savesection(){save();toast("Saved.")},
+    savestory(){save();toast("Your story is saved. WillHelp will use it in your documents and matches.");location.hash="#home"},
+    onboarded(){state.onboarded=true;save();if(b.tagName==="BUTTON")render()},
+    sharedon(){try{const cur=JSON.stringify(state);localStorage.removeItem(KEY);sessionStorage.setItem("willhelp.shared","1");sessionStorage.setItem(KEY,cur)}catch(_){}state.onboarded=true;save();render();toast("Shared computer mode is on. Your information clears when you close this browser.")},
+    sharedoff(){try{const cur=JSON.stringify(state);sessionStorage.removeItem("willhelp.shared");sessionStorage.removeItem(KEY);localStorage.setItem(KEY,cur)}catch(_){}render();toast("Your information now stays on this device.")},
+    dismiss(){state.dismissed.push(b.dataset.id);save();render()},
+    undismiss(){state.dismissed=[];save();render()},
+    jumpto(){const el=document.getElementById(b.dataset.to);if(el){el.scrollIntoView({behavior:"smooth",block:"start"});el.focus({preventScroll:true})}},
+    cmpadd(){state.compliance.push({id:"c"+Date.now().toString(36),label:b.dataset.label==="Other"?"":b.dataset.label,preset:b.dataset.label,done:"",due:""});save();render()},
+    cmpdel(){const i=+b.dataset.i;if(!confirmTap("cmpdel"+i,"Remove this item?"))return;state.compliance.splice(i,1);save();render()},
+    stage(){if(anyCourseData()&&!confirmTap("stage","This replaces the course statuses you already set."))return;const i=+b.dataset.i;const terms=DATA.curriculum.terms;DATA.curriculum.courses.forEach(c=>{const ti=terms.findIndex(t=>t.id===c.term);const st=ti<i?"completed":ti===i?"in_progress":"planned";const cur=state.profile.education.courses[c.code]||{};state.profile.education.courses[c.code]={...cur,status:st,reported:"student"}});state.onboarded=true;save();render();toast("Here's what I assumed from Simpson's published plan. Tell me what's different below.")},
+    pathflag(){const k=b.dataset.k;state.profile.education.path[k]=!state.profile.education.path[k];save();render()},
+    add(){const arr=b.dataset.arr;const base={experience:{type:"employment"},credentials:{kind:"held"},skills:{kind:"supervised"},languages:{},accomplishments:{type:"Teamwork"}}[arr];state.profile[arr].push({id:uid(),...base});save();render()},
+    rm(){state.profile[b.dataset.arr].splice(+b.dataset.i,1);save();render()},
+    newresume(){const target=state._newTarget||"Student employment";const d={id:uid(),kind:"resume",title:`Résumé: ${target}`,target,status:"draft",storyHash:FP.resume(),excludes:[],includeClassroom:[],createdAt:new Date().toISOString().slice(0,10),updatedAt:new Date().toISOString().slice(0,10)};state.docs.push(d);state.activeDoc=d.id;save();render()},
+    opendoc(){state.activeDoc=b.dataset.id;save();if(location.hash==="#create-resume")render()},
+    editwording(){const d=currentDraft();if(state._editing){settlePlaceholders($("#docPreview"));d.customHtml=$("#docPreview").innerHTML;d.storyHash=FP.resume();d.updatedAt=new Date().toISOString().slice(0,10);save();state._editing=false;toast("Your wording is saved on this draft.")}else state._editing=true;render()},
+    refresh(){const d=currentDraft();if(d.customHtml&&!confirmTap("refresh","This replaces your edited wording."))return;d.customHtml=null;d.storyHash=FP.resume();d.updatedAt=new Date().toISOString().slice(0,10);save();render();toast("Draft updated from your story. Finalized versions were not touched.")},
+    copyresume(){const d=currentDraft();copyText(htmlToText(cleanHTML(d.customHtml||buildResumeHTML(d))))},
+    printdraft(){const d=currentDraft();printHTML(cleanHTML(d.customHtml||buildResumeHTML(d)))},
+    "dl-txt"(){const d=currentDraft();download(`${d.title.replace(/[^\w ]/g,"")}.txt`,htmlToText(cleanHTML(d.customHtml||buildResumeHTML(d))))},
+    "dl-doc"(){const d=currentDraft();const body=cleanHTML(d.customHtml||buildResumeHTML(d));download(`${d.title.replace(/[^\w ]/g,"")}.doc`,`<html><head><meta charset="utf-8"><style>body{font-family:Calibri,Arial,sans-serif;font-size:11pt}h1{font-size:18pt;margin:0}h2{font-size:11pt;text-transform:uppercase;border-bottom:1px solid #444}</style></head><body>${body}</body></html>`,"application/msword")},
+    finalize(){const d=currentDraft();const html=cleanHTML(d.customHtml||buildResumeHTML(d));if(hasBlanks(d.customHtml||buildResumeHTML(d))&&!confirmTap("finalize","Unfilled blanks will be left out of the finalized version."))return;const n=state.docs.filter(x=>x.kind==="resume"&&x.status==="final"&&x.target===d.target).length+1;state.docs.push({id:uid(),kind:"resume",title:`${d.title} (version ${n})`,target:d.target,status:"final",html,finalizedAt:new Date().toISOString().slice(0,10)});save();render();toast("Finalized. This version won't change when your story changes.")},
+    discard(){const d=currentDraft();if(!confirmTap("discard","Delete this draft? Finalized versions stay."))return;state.docs=state.docs.filter(x=>x.id!==d.id);save();render()},
+    viewfinal(){const d=state.docs.find(x=>x.id===b.dataset.id);const w=document.createElement("div");w.className="card";w.innerHTML=`<h3>${esc(d.title)}</h3><div class="doc">${d.html}</div>`;b.closest(".card").after(w);b.disabled=true},
+    printdoc(){const d=state.docs.find(x=>x.id===b.dataset.id);printHTML(d.html)},
+    genrec(){if(state._rec.message&&state._rec.edited&&!confirmTap("genrec","This replaces the message you edited."))return;state._rec.edited=false;genRec();state._rec.msgHash=FP.rec();render();toast("Here's a draft. Tell me what you'd like to change.")},
+    copyrec(){copyText(state._rec.message)},
+    dlpacket(){download("recommendation-packet.txt",state._rec.message+"\n\n-----\n\n"+htmlToText(recPacket()))},
+    printpacket(){printHTML(recPacket())},
+    copycna(){copyText(state.cna.letter)},
+    resetcna(){state.cna.letter=cnaLetter();state.cna.letterHash=FP.cna();save();render()},
+    saveopp(){const r=DATA.resources.find(x=>x.id===b.dataset.id);state.apps.push({id:uid(),resId:r.id,title:`${r.title}, ${r.org}`,status:"Saved",deadline:"",notes:""});save();render();toast("Saved to your tracker.")},
+    report(){const r=DATA.resources.find(x=>x.id===b.dataset.id);if(!DATA.settings.reportEmail){toast("Reporting isn't set up in this prototype yet. Please tell your instructor.");return}location.href=`mailto:${DATA.settings.reportEmail}?subject=${encodeURIComponent("WillHelp outdated info: "+r.title)}&body=${encodeURIComponent("Listing: "+r.title+"\nWhat looks outdated:\n")}`},
+    addapp(){state.apps.push({id:uid(),title:"",status:"Saved"});save();render()},
+    rmapp(){state.apps.splice(+b.dataset.i,1);save();render()},
+    export(){state.lastExport=new Date().toISOString().slice(0,10);save();const o={...state};delete o._rec;delete o._editing;download(`WillHelp-Backup-${new Date().toISOString().slice(0,10)}.json`,JSON.stringify(o,null,2),"application/json");toast("Backup downloaded.")},
+    "delete-all"(){if(!confirmTap("delall","This deletes everything WillHelp stored on this device and can't be undone."))return;try{localStorage.removeItem(KEY);sessionStorage.removeItem(KEY)}catch(_){}state=blankState();render();toast("Everything was deleted from this device.")},
+  };
+  if(acts[a]){if(b.tagName==="BUTTON")e.preventDefault();acts[a]()}
+});
+render();
+</script>
+</body>
+</html>
